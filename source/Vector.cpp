@@ -16,22 +16,42 @@ Vector::Vector(const Vector & other) :
 Vector::~Vector()
 {}
 
-double Vector::Dot(const Vector & other)
+double Vector::Dot(const Vector & other) const
 {
 	return fX * other.fX + fY * other.fY;
 }
 
-double Vector::Arg()
+double Vector::Arg() const
 {
 	return std::atan(fY/fX);
 }
 
-double Vector::Mod()
+double Vector::Mod() const
 {
 	return std::sqrt(fX * fX + fY * fY);
 }
 
-double Vector::Norm()
+Vector Vector::Norm() const
 {
 	return Vector(fX / this->Mod(), fY / this->Mod());
+}
+
+Vector operator*(double lhs, const Vector & rhs)
+{
+	return Vector(lhs * rhs.fX, lhs * rhs.fY);
+}
+
+bool Vector::operator==(const Vector & other) const
+{
+	if (fX == other.fX && fY == other.fY)
+		return true;
+	else
+		return false;
+}
+
+Vector & Vector::operator=(const Vector & other)
+{
+	this->fX = other.fX;
+	this->fY = other.fY;
+	return *this;
 }
