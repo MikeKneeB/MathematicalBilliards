@@ -35,7 +35,8 @@ args = parser.parse_args()
 
 if args.sources==None:
     for file_ in os.listdir(source_dir): 
-        if file_.endswith(".cpp") and file_ not in executables_to_compile.keys():
+        if file_.endswith(".cpp"):
+            # and file_ not in executables_to_compile.keys()
             exe_list = [compiler, "-c", "-o", obj_dir+file_[:-4]+".o", source_dir+file_]
             if args.suppress_flags==False:
                 exe_list += compiler_flags 
@@ -52,16 +53,22 @@ if args.sources==None:
 
     for source_file in executables_to_compile:
         if args.cygwin==True:
-            exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file]+'.exe', source_dir+source_file] + glob.glob(obj_dir+"*.o")
+            exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file]+'.exe', obj_dir+source_file[:-4]+".o"]
         else:
-            exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file], source_dir+source_file] + glob.glob(obj_dir+"*.o")
+            exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file], obj_dir+source_file[:-4]+".o"]
+
+        for file_ in os.listdir(obj_dir):
+            if file_[:-2]+".cpp" not in executables_to_compile.keys():
+                exe_list += [obj_dir+file_]
+
         if args.suppress_flags==False:
             exe_list += compiler_flags 
+
         if not args.flags==None:
             for item in args.flags:
                 exe_list += "-"+item
+
         print "Calling: " + ' '.join(exe_list)
-        print
         if call(exe_list) != 0:
             success = False
 

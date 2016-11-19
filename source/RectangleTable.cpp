@@ -28,17 +28,18 @@ void RectangleTable::SetY(double y)
 
 double RectangleTable::AngleIncidence(const Vector & collision, const Vector & velocity)
 {
-	if (collision.fX = fX)
+	if (collision.fX == fX)
 		return M_PI/2 - velocity.Arg();
-	else if (collision.fX = -fX)
+	else if (collision.fX == -fX)
 		return 3*M_PI/2 - velocity.Arg();
-	else if (collision.fX = fY)
+	else if (collision.fX == fY)
 		return -velocity.Arg();
-	else if (collision.fX = -fY)
+	else if (collision.fX == -fY)
 		return M_PI - velocity.Arg();
+	else return 0;
 }
 
 Vector RectangleTable::CollisionPoint(const Vector & initial, const Vector & velocity)
 {
-	 
+	 return Vector(0,0);
 }

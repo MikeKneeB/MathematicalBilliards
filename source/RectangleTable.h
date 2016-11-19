@@ -12,8 +12,8 @@ public:
 
 	double GetX() const { return fX; }
 	double GetY() const { return fY; }
-	void SetX();
-	void SetY();
+	void SetX(double x);
+	void SetY(double y);
 
 	double AngleIncidence(const Vector & collision, const Vector & velocity);
 	Vector CollisionPoint(const Vector & initial, const Vector & velocity); 
