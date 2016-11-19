@@ -9,6 +9,7 @@
 import argparse
 from subprocess import call
 import os
+import glob
 
 parser = argparse.ArgumentParser(description='Build automater written by Mike Knee')
 
@@ -20,7 +21,8 @@ parser.add_argument('--cygwin', '-c', help='Compile for windows lol.', action='s
 compiler="g++"
 compiler_flags=["-Wall", "-O2"]
 source_dir="source/"
-object_dir="images/"
+exe_dir="images/"
+obj_dir="obj/"
 success = True
 
 executables_to_compile={"test.cpp" : "test"}
@@ -32,19 +34,34 @@ print
 args = parser.parse_args()
 
 if args.sources==None:
-    
+    for file_ in os.listdir(source_dir): 
+        if file_.endswith(".cpp") and file_ not in executables_to_compile.keys():
+            exe_list = [compiler, "-c", "-o", obj_dir+file_[:-4]+".o", source_dir+file_]
+            if args.suppress_flags==False:
+                exe_list += compiler_flags 
+            if not args.flags==None:
+                for item in args.flags:
+                    exe_list += "-"+item
+            if not os.path.exists(obj_dir+file_[:-4]+".o") or os.path.getmtime(obj_dir+file_[:-4]+".o") < os.path.getmtime(source_dir+file_):
+                print "Calling: " + ' '.join(exe_list)
+                print
+                if call(exe_list) != 0:
+                    success = False
+            else:
+                print file_ + " is up to date."
+
     for source_file in executables_to_compile:
         if args.cygwin==True:
-            exe_list = [compiler, "-o", object_dir+executables_to_compile[source_file]+'.exe', source_dir+source_file]
+            exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file]+'.exe', source_dir+source_file] + glob.glob(obj_dir+"*.o")
         else:
-            exe_list = [compiler, "-o", object_dir+executables_to_compile[source_file], source_dir+source_file]
+            exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file], source_dir+source_file] + glob.glob(obj_dir+"*.o")
         if args.suppress_flags==False:
             exe_list += compiler_flags 
         if not args.flags==None:
             for item in args.flags:
                 exe_list += "-"+item
         print "Calling: " + ' '.join(exe_list)
-	print
+        print
         if call(exe_list) != 0:
             success = False
 
@@ -52,9 +69,9 @@ else:
 
     for item in args.sources:
         if args.cygwin==True:
-            exe_list = [compiler, "-o", object_dir+executables_to_compile[source_file]+'.exe', source_dir+source_file]
+            exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file]+'.exe', source_dir+source_file]
         else:
-            exe_list = [compiler, "-o", object_dir+executables_to_compile[source_file], source_dir+source_file]
+            exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file], source_dir+source_file]
         if args.suppress_flags==False:
             exe_list[1:1] = compiler_flags 
         if not args.flags==None:
