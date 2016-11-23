@@ -15,6 +15,11 @@ CircleTable::~CircleTable()
 
 double CircleTable::AngleIncidence(const Vector & collision, const Vector & velocity)
 {
+	if (collision.Mod() != fRadius)
+	{
+		not_collision_exception e;
+		throw e;
+	}
 	return collision.Arg() - velocity.Arg();
 }
 
@@ -22,7 +27,7 @@ Vector CircleTable::CollisionPoint(const Vector & initial, const Vector & veloci
 {
 	if (initial.Mod() > fRadius)
 	{
-		out_of_bounds e;
+		out_of_bounds_exception e;
 		throw e;
 	}
 		

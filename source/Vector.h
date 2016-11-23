@@ -24,6 +24,7 @@ public:
 	double Arg() const;
 	double Mod() const;
 	Vector Norm() const;
+	Vector Rotate(double angle) const;
 
 	// Member variables are public, as access restrictions are not necessary.
 	double fX;

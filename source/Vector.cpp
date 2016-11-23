@@ -36,6 +36,11 @@ Vector Vector::Norm() const
 	return Vector(fX / this->Mod(), fY / this->Mod());
 }
 
+Vector Vector::Rotate(double angle) const
+{
+	return Vector(fX * cos(angle) - fY * sin(angle), fX * sin(angle) + fY * cos(angle));
+}
+
 Vector operator*(double lhs, const Vector & rhs)
 {
 	return Vector(lhs * rhs.fX, lhs * rhs.fY);

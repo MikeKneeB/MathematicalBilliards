@@ -19,7 +19,7 @@ parser.add_argument('--sources', '-s', nargs='*', help='List of specific sources
 parser.add_argument('--cygwin', '-c', help='Compile for windows lol.', action='store_true')
 
 compiler="g++"
-compiler_flags=["-Wall", "-O2"]
+compiler_flags=["-Wall", "-O2", "-std=c++11"]
 source_dir="source/"
 exe_dir="images/"
 obj_dir="obj/"

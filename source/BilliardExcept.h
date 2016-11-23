@@ -3,11 +3,19 @@
 
 #include <exception>
 
-class out_of_bounds : public std::exception
+class out_of_bounds_exception : public std::exception
 {
 	virtual const char* what() const throw()
 	{
 		return "Position is outside table.\n";
+	}
+};
+
+class not_collision_exception : public std::exception
+{
+	virtual const char* what() const throw()
+	{
+		return "Position is not a collision.\n";
 	}
 };
 
