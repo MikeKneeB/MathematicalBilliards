@@ -25,7 +25,8 @@ exe_dir="images/"
 obj_dir="obj/"
 success = True
 
-executables_to_compile={"test.cpp" : "test"}
+executables_to_compile={"test.cpp" : "test",
+			"rectest.cpp" : "rectest"}
 
 print
 print "Beginning build."

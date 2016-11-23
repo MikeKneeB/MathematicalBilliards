@@ -29,17 +29,52 @@ void RectangleTable::SetY(double y)
 double RectangleTable::AngleIncidence(const Vector & collision, const Vector & velocity)
 {
 	if (collision.fX == fX)
-		return M_PI/2 - velocity.Arg();
-	else if (collision.fX == -fX)
-		return 3*M_PI/2 - velocity.Arg();
-	else if (collision.fX == fY)
 		return -velocity.Arg();
-	else if (collision.fX == -fY)
+	else if (collision.fX == -fX)
 		return M_PI - velocity.Arg();
+	else if (collision.fX == fY)
+		return M_PI/2 - velocity.Arg();
+	else if (collision.fX == -fY)
+		return 3*M_PI/2 - velocity.Arg();
 	else return 0;
 }
 
 Vector RectangleTable::CollisionPoint(const Vector & initial, const Vector & velocity)
 {
-	 return Vector(0,0);
+	double gamma;
+
+	if (velocity.fY >= 0)
+	{
+		//p = i + gv
+		gamma = (fY - initial.fY)/velocity.fY;
+		double x = initial.fX + gamma * velocity.fX;
+		if (x <= fX && x >= -fX)
+		{
+			return Vector(x, fY);
+		}
+	}
+	else
+	{
+		gamma = (-fY - initial.fY)/velocity.fY;
+		double x = initial.fX + gamma * velocity.fX;
+		if (x <= fX && x >= -fX)
+		{
+			return Vector(x, -fY);
+		}
+	}
+
+	if (velocity.fX >= 0)
+	{
+		gamma = (fX - initial.fX)/velocity.fX;
+		double y = initial.fY + gamma * velocity.fY;
+		return Vector(fX, y);
+	}
+	else
+	{
+		gamma = (-fX - initial.fX)/velocity.fX;
+		double y = initial.fY + gamma * velocity.fY;
+		return Vector(-fX, y);
+	}
+
+	return Vector(0,0);
 }
