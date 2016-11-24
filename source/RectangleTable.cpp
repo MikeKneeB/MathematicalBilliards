@@ -67,6 +67,48 @@ double RectangleTable::AngleIncidence(const Vector & collision, const Vector & v
 	throw e; 
 }
 
+Vector RectangleTable::ReflectVector(const Vector & collision, const Vector & velocity)
+{
+	Vector temp, norm;
+
+	if (collision.fX == fX)
+	{
+		// Check corner cases.
+		if (collision.fY == fY)
+		{
+			norm = Vector(-std::sqrt(2),-std::sqrt(2));
+		}
+		else if (collision.fY == -fY)
+		{
+			norm = Vector(-std::sqrt(2),std::sqrt(2));
+		}
+		norm = Vector(-1,0);
+	}
+	else if (collision.fX == -fX)
+	{
+		if (collision.fY == fY)
+		{
+			norm = Vector(std::sqrt(2),-std::sqrt(2));
+		}
+		else if (collision.fY == -fY)
+		{
+			norm = Vector(std::sqrt(2),std::sqrt(2));	
+		}
+		norm = Vector(1,0);
+	}
+	// No need to check corner cases now, as they would already have been caught.
+	else if (collision.fY == fY)
+		norm = Vector(0,-1);
+	else if (collision.fY == -fY)
+		norm = Vector(0,1);
+
+	not_collision_exception e;
+	throw e; 
+
+	temp = velocity - 2*velocity.Dot(norm)*norm;	
+	return temp;
+}
+
 Vector RectangleTable::CollisionPoint(const Vector & initial, const Vector & velocity)
 {
 	double gamma;

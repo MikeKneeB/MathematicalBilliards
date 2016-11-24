@@ -1,23 +1,23 @@
-#ifndef _SQAURETABLE_H
-#define _SQAURETABLE_H
+#ifndef _STADIUMTABLE_H
+#define _STADIUMTABLE_H
 
 #include "ITable.h"
 
-class RectangleTable : public ITable
+class StadiumTable : public ITable
 {
 public:
-	RectangleTable();
-	RectangleTable(double x, double y);
-	~RectangleTable();
+	StadiumTable();
+	StadiumTable(double x, double y);
+	~StadiumTable();
 
 	double GetX() const { return fX; }
 	double GetY() const { return fY; }
 	void SetX(double x);
-	void SetY(double y);
+	void SetY(double y); 
 
 	double AngleIncidence(const Vector & collision, const Vector & velocity);
 	Vector ReflectVector(const Vector & collision, const Vector & velocity);
-	Vector CollisionPoint(const Vector & initial, const Vector & velocity); 
+	Vector CollisionPoint(const Vector & initial, const Vector & velocity);	
 private:
 	double fX;
 	double fY;

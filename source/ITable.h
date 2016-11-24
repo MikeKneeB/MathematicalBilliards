@@ -20,6 +20,8 @@ public:
  	*/
 	virtual double AngleIncidence(const Vector & collision, const Vector & velocity) = 0;
 
+	virtual Vector ReflectVector(const Vector & collision, const Vector & velocity) =0;
+
 	/**
  	* CollisionPoint returns the point on the table edge that the ball
  	* collides at.

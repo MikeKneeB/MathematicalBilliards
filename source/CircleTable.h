@@ -11,9 +11,10 @@ public:
 	~CircleTable();
 
 	inline double GetRadius() { return fRadius; }
-	inline void SetRadius(double radius) { fRadius = radius; }
+	inline void SetRadius(double radius) { if (radius > 0) fRadius = radius; }
 
 	double AngleIncidence(const Vector & collision, const Vector & velocity);
+	Vector ReflectVector(const Vector & collision, const Vector & velocity);
 	Vector CollisionPoint(const Vector & initial, const Vector & velocity); 
 private:
 	double fRadius;

@@ -1,17 +1,21 @@
 #include <cstdio>
 #include <cmath>
 #include <random>
+#include <ctime>
 
 #include "RectangleTable.h"
+#include "CircleTable.h"
 
 int main()
 {
-	RectangleTable rec = RectangleTable(1,1);
+	CircleTable table = CircleTable(1);
 
 	std::uniform_real_distribution<double> unif(-1,1);
 	std::default_random_engine def;
+
+	def.seed(std::time(0));
 	
-	Vector initial = Vector(unif(def),unif(def));
+	Vector initial = Vector(0,0.5);
 	Vector velocity = Vector(unif(def),unif(def));
 
 	double angle = velocity.Arg();
@@ -20,13 +24,13 @@ int main()
 
 	file = fopen("out", "w");
 
-	fprintf(file, "%-20s%-20s%-20s\n", "x", "y", "a");
+	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "a", "vx", "vy");
 
 	for (int i = 0; i != 50; i++)
 	{
-		fprintf(file, "%-20.15f%-20.15f%-20.15f\n", initial.fX, initial.fY, angle);
-		initial = rec.CollisionPoint(initial, velocity);
-		angle = std::fmod(rec.AngleIncidence(initial, velocity), 2*M_PI);
+		fprintf(file, "%-10i%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f\n", i, initial.fX, initial.fY, angle, velocity.fX, velocity.fY);
+		initial = table.CollisionPoint(initial, velocity);
+		angle = std::fmod(table.AngleIncidence(initial, velocity), 2*M_PI);
 		velocity = velocity.Rotate(2*angle + M_PI);
 	}
 
