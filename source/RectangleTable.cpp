@@ -1,7 +1,6 @@
 #include <cmath>
 
 #include "RectangleTable.h"
-#include "BilliardExcept.h"
 
 RectangleTable::RectangleTable()
 {}
@@ -63,8 +62,7 @@ double RectangleTable::AngleIncidence(const Vector & collision, const Vector & v
 	else if (collision.fY == -fY)
 		return 3*M_PI/2 - velocity.Arg();
 
-	not_collision_exception e;
-	throw e; 
+	return 0;
 }
 
 Vector RectangleTable::ReflectVector(const Vector & collision, const Vector & velocity)
@@ -102,9 +100,6 @@ Vector RectangleTable::ReflectVector(const Vector & collision, const Vector & ve
 	else if (collision.fY == -fY)
 		norm = Vector(0,1);
 
-	not_collision_exception e;
-	throw e; 
-
 	temp = velocity - 2*velocity.Dot(norm)*norm;	
 	return temp;
 }
@@ -112,12 +107,6 @@ Vector RectangleTable::ReflectVector(const Vector & collision, const Vector & ve
 Vector RectangleTable::CollisionPoint(const Vector & initial, const Vector & velocity)
 {
 	double gamma;
-
-	if (initial.fX > fX || initial.fX < -fX || initial.fY > fY || initial.fY < -fY)
-	{
-		out_of_bounds_exception e;
-		throw e;
-	}
 
 	if (velocity.fY >= 0)
 	// Set y = fY:

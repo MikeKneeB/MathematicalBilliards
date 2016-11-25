@@ -1,7 +1,6 @@
 #include <cmath>
 
 #include "CircleTable.h"
-#include "BilliardExcept.h"
 
 CircleTable::CircleTable()
 {}
@@ -15,11 +14,6 @@ CircleTable::~CircleTable()
 
 double CircleTable::AngleIncidence(const Vector & collision, const Vector & velocity)
 {
-//	if (collision.Mod() != fRadius)
-//	{
-//		not_collision_exception e;
-//		throw e;
-//	}
 	return collision.Arg() - velocity.Arg();
 }
 
@@ -34,12 +28,6 @@ Vector CircleTable::ReflectVector(const Vector & collision, const Vector & veloc
 
 Vector CircleTable::CollisionPoint(const Vector & initial, const Vector & velocity)
 {
-//	if (initial.Mod() > fRadius)
-//	{
-//		out_of_bounds_exception e;
-//		throw e;
-//	}
-		
 	double gamma;
 
 	double a, b, c;

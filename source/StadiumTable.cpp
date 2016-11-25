@@ -1,7 +1,6 @@
 #include <cmath>
 
 #include "StadiumTable.h"
-#include "BilliardExcept.h"
 
 StadiumTable::StadiumTable()
 {}
@@ -29,7 +28,26 @@ void StadiumTable::SetY(double y)
 
 double StadiumTable::AngleIncidence(const Vector & collision, const Vector & velocity)
 {
-	return 0;		
+	Vector norm = Vector(0,0);
+	double temp;
+
+	if (collision.fY == fY)
+		norm = Vector(0,-1);
+	else if (collision.fY == -fY)
+		norm = Vector(0,1);
+	else if (collision.fX >= fX)
+	{
+		norm = collision - Vector(fX, 0);		
+		norm = norm/norm.Mod();
+	}
+	else if (collision.fX <= fY)
+	{
+		norm = collision - Vector(-fX, 0);
+		norm = norm/norm.Mod();
+	}
+
+	temp = norm.Arg() - velocity.Arg();
+	return temp;
 }
 
 Vector StadiumTable::ReflectVector(const Vector & collision, const Vector & velocity)
@@ -121,5 +139,4 @@ Vector StadiumTable::CollisionPoint(const Vector & initial, const Vector & veloc
 	}
 
 	return Vector(0,0);
-
 }
