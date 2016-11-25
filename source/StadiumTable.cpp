@@ -40,7 +40,7 @@ double StadiumTable::AngleIncidence(const Vector & collision, const Vector & vel
 		norm = collision - Vector(fX, 0);		
 		norm = norm/norm.Mod();
 	}
-	else if (collision.fX <= fY)
+	else if (collision.fX <= -fX)
 	{
 		norm = collision - Vector(-fX, 0);
 		norm = norm/norm.Mod();
@@ -62,16 +62,16 @@ Vector StadiumTable::ReflectVector(const Vector & collision, const Vector & velo
 	else if (collision.fX >= fX)
 	{
 		norm = collision - Vector(fX, 0);		
-		norm = norm/norm.Mod();
+		norm = -norm/norm.Mod();
 	}
-	else if (collision.fX <= fY)
+	else if (collision.fX <= -fX)
 	{
 		norm = collision - Vector(-fX, 0);
-		norm = norm/norm.Mod();
+		norm = -norm/norm.Mod();
 	}
 
 	temp = velocity - 2*velocity.Dot(norm)*norm;
-	return temp;		
+	return temp;
 }
 
 Vector StadiumTable::CollisionPoint(const Vector & initial, const Vector & velocity)
@@ -79,7 +79,7 @@ Vector StadiumTable::CollisionPoint(const Vector & initial, const Vector & veloc
 	double gamma;
 	Vector temp;
 
-	if (velocity.fY >= 0)
+	if (velocity.fY > 0)
 	// Set y = fY:
 	{
 		//p = i + gv
@@ -89,8 +89,43 @@ Vector StadiumTable::CollisionPoint(const Vector & initial, const Vector & veloc
 		{
 			return Vector(x, fY);
 		}
+		else if (x >= fX)
+		{
+			if (initial.fX >= fX)
+			{
+				temp = initial - Vector(fX,0);
+
+				double a, b, c;
+
+				a = velocity.fX * velocity.fX + velocity.fY * velocity.fY;
+				b = 2 * (temp.fX * velocity.fX + temp.fY * velocity.fY);
+				c = temp.fX * temp.fX + temp.fY * temp.fY - fY * fY;
+
+				gamma = (-b + std::sqrt(b * b - 4 * a * c))/(2 * a);
+
+				return temp + gamma * velocity + Vector(fX,0);
+			}
+		}
+		else if (x <= -fX)
+		{
+			if (initial.fX <= -fX)
+			{
+				temp = initial - Vector(-fX,0);
+
+				double a, b, c;
+
+				a = velocity.fX * velocity.fX + velocity.fY * velocity.fY;
+				b = 2 * (temp.fX * velocity.fX + temp.fY * velocity.fY);
+				c = temp.fX * temp.fX + temp.fY * temp.fY - fY * fY;
+
+				gamma = (-b + std::sqrt(b * b - 4 * a * c))/(2 * a);
+
+				return temp + gamma * velocity + Vector(-fX,0);
+
+			}
+		}
 	}
-	else
+	else if (velocity.fY < 0)
 	// Set y = -fY:
 	{
 		gamma = (-fY - initial.fY)/velocity.fY;
@@ -99,28 +134,63 @@ Vector StadiumTable::CollisionPoint(const Vector & initial, const Vector & veloc
 		{
 			return Vector(x, -fY);
 		}
+		else if (x >= fX)
+		{
+			if (initial.fX >= fX)
+			{
+				temp = initial - Vector(fX,0);
+
+				double a, b, c;
+
+				a = velocity.fX * velocity.fX + velocity.fY * velocity.fY;
+				b = 2 * (temp.fX * velocity.fX + temp.fY * velocity.fY);
+				c = temp.fX * temp.fX + temp.fY * temp.fY - fY * fY;
+
+				gamma = (-b + std::sqrt(b * b - 4 * a * c))/(2 * a);
+
+				return temp + gamma * velocity + Vector(fX,0);
+			}
+		}
+		else if (x <= -fX)
+		{
+			if (initial.fX <= -fX)
+			{
+				temp = initial - Vector(-fX,0);
+
+				double a, b, c;
+
+				a = velocity.fX * velocity.fX + velocity.fY * velocity.fY;
+				b = 2 * (temp.fX * velocity.fX + temp.fY * velocity.fY);
+				c = temp.fX * temp.fX + temp.fY * temp.fY - fY * fY;
+
+				gamma = (-b + std::sqrt(b * b - 4 * a * c))/(2 * a);
+
+				return temp + gamma * velocity + Vector(-fX,0);
+
+			}
+		}
 	}
 
 	// Setting y = fY has gone out of bounds, so now set x = fX:
-	if (velocity.fX >= 0)
+	if (velocity.fX > 0)
 	// x = fX:
 	{
 		gamma = (fX - initial.fX)/velocity.fX;
 		double y = initial.fY + gamma * velocity.fY;
-		temp = Vector(0, y);
+		temp = Vector(0,y);
 
 		double a, b, c;
 
 		a = velocity.fX * velocity.fX + velocity.fY * velocity.fY;
-		b = 2 * (temp.fX * velocity.fX + initial.fY * velocity.fY);
-		c = temp.fX * temp.fX + temp.fY * temp.fY - fY * fY;
+		b = 2 * (/*temp.fX * velocity.fX + */temp.fY * velocity.fY);
+		c = /*temp.fX * temp.fX + */temp.fY * temp.fY - fY * fY;
 
 		gamma = (-b + std::sqrt(b * b - 4 * a * c))/(2 * a);
 
 		return temp + gamma * velocity + Vector(fX, 0);
 
 	}
-	else
+	else if (velocity.fX < 0)
 	// x = -fX:
 	{
 		gamma = (-fX - initial.fX)/velocity.fX;
@@ -130,8 +200,8 @@ Vector StadiumTable::CollisionPoint(const Vector & initial, const Vector & veloc
 		double a, b, c;
 
 		a = velocity.fX * velocity.fX + velocity.fY * velocity.fY;
-		b = 2 * (temp.fX * velocity.fX + initial.fY * velocity.fY);
-		c = temp.fX * temp.fX + temp.fY * temp.fY - fY * fY;
+		b = 2 * (/*temp.fX * velocity.fX + */temp.fY * velocity.fY);
+		c = /*temp.fX * temp.fX + */temp.fY * temp.fY - fY * fY;
 
 		gamma = (-b + std::sqrt(b * b - 4 * a * c))/(2 * a);
 

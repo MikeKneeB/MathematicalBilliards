@@ -108,7 +108,7 @@ Vector RectangleTable::CollisionPoint(const Vector & initial, const Vector & vel
 {
 	double gamma;
 
-	if (velocity.fY >= 0)
+	if (velocity.fY > 0)
 	// Set y = fY:
 	{
 		//p = i + gv
@@ -119,7 +119,7 @@ Vector RectangleTable::CollisionPoint(const Vector & initial, const Vector & vel
 			return Vector(x, fY);
 		}
 	}
-	else
+	else if (velocity.fY < 0)
 	// Set y = -fY:
 	{
 		gamma = (-fY - initial.fY)/velocity.fY;
@@ -131,14 +131,14 @@ Vector RectangleTable::CollisionPoint(const Vector & initial, const Vector & vel
 	}
 
 	// Setting y = fY has gone out of bounds, so now set x = fX:
-	if (velocity.fX >= 0)
+	if (velocity.fX > 0)
 	// x = fX:
 	{
 		gamma = (fX - initial.fX)/velocity.fX;
 		double y = initial.fY + gamma * velocity.fY;
 		return Vector(fX, y);
 	}
-	else
+	else if (velocity.fX > 0)
 	// x = -fX:
 	{
 		gamma = (-fX - initial.fX)/velocity.fX;

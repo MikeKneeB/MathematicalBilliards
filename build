@@ -26,7 +26,8 @@ obj_dir="obj/"
 success = True
 
 executables_to_compile={"test.cpp" : "test",
-			"rectest.cpp" : "rectest"}
+			"rectest.cpp" : "rectest",
+			"main.cpp" : "main"}
 
 print
 print "Beginning build."
@@ -46,12 +47,11 @@ if args.sources==None:
                     exe_list += "-"+item
             if not os.path.exists(obj_dir+file_[:-4]+".o") or os.path.getmtime(obj_dir+file_[:-4]+".o") < os.path.getmtime(source_dir+file_):
                 print "Calling: " + ' '.join(exe_list)
-                print
                 if call(exe_list) != 0:
                     success = False
             else:
                 print file_ + " is up to date."
-
+    print
     for source_file in executables_to_compile:
         if args.cygwin==True:
             exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file]+'.exe', obj_dir+source_file[:-4]+".o"]
@@ -72,6 +72,7 @@ if args.sources==None:
         print "Calling: " + ' '.join(exe_list)
         if call(exe_list) != 0:
             success = False
+    print
 
 else:
 

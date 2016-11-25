@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <iostream>
+#include <cmath>
 
 #include "StadiumTable.h"
 #include "EllipseTable.h"
@@ -23,29 +24,36 @@ int main()
 {
 	while (true)
 	{
-		printf("Wow really excellent and cool billiards table fun.\n\n");
+		printf("\n########################\n");
+		printf("# Billiards Simulation #\n");
+		printf("########################\n\n");
 
 		printf("(1) Stadium Table.\n");
 		printf("(2) Elliptical Table.\n");
 		printf("(3) Circular Table.\n");
 		printf("(4) Rectangular Table.\n");
-		printf("(5) Exit.\n");
+		printf("(5) Help.\n");
+		printf("(6) Exit.\n");
 
+		printf("Please enter a choice: ");
 		int choice;
 
-		while (!(std::cin >> choice) || choice < 1 || choice > 5)
+		while (!(std::cin >> choice) || choice < 1 || choice > 6)
 		{
 			printf("Enter a valid choice.\n");
 			std::cin.clear();
 			std::cin.ignore();
 		}
 		
-		if (choice == 5) break;
+		if (choice == 6) break;
 
-		int n;
+		int n = 0;
 
-		printf("Please enter number of iterations: ");
-		cin >> n;
+		if (choice != 5)
+		{
+			printf("Please enter number of iterations: ");
+			std::cin >> n;
+		}
 
 		switch (choice)
 		{
@@ -61,6 +69,9 @@ int main()
 			case 4:
 				RunRectangle(n);
 				break;
+			case 5:
+				Help();
+				break;
 		}
 	}
 }
@@ -69,9 +80,9 @@ void RunStadium(int n)
 {
 	double y, x;
 	printf("Please enter y size: ");
-	cin >> y;
+	std::cin >> y;
 	printf("Please enter x size: ");
-	cin >> x;
+	std::cin >> x;
 
 	StadiumTable table = StadiumTable(x, y);
 
@@ -79,9 +90,13 @@ void RunStadium(int n)
 
 	GetArgs(initial, velocity);
 
+	double angle = velocity.Arg();
+
 	FILE * file;
 
 	file = fopen("stadout", "w");
+
+	printf("\nWriting to 'stadout'...\n");
 
 	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "a", "vx", "vy");
 
@@ -94,6 +109,8 @@ void RunStadium(int n)
 	}
 
 	fclose(file);
+
+	printf("Done!\n");
 
 	return;
 }
@@ -102,11 +119,11 @@ void RunEllipse(int n)
 {
 	double y, x, r;
 	printf("Please enter y coefficient: ");
-	cin >> y;
+	std::cin >> y;
 	printf("Please enter x coefficient: ");
-	cin >> x;
+	std::cin >> x;
 	printf("Please enter radius: ");
-	cin >> r;
+	std::cin >> r;
 
 	EllipseTable table = EllipseTable(r, x, y);
 
@@ -114,9 +131,13 @@ void RunEllipse(int n)
 
 	GetArgs(initial, velocity);
 
+	double angle = velocity.Arg();
+
 	FILE * file;
 
 	file = fopen("elipout", "w");
+
+	printf("\nWriting to 'elipout'...\n");
 
 	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "a", "vx", "vy");
 
@@ -130,26 +151,30 @@ void RunEllipse(int n)
 
 	fclose(file);
 
+	printf("Done!\n");
+
 	return;
 }
 
-void RunCirlce(int n)
+void RunCircle(int n)
 {
 	double r;
 	printf("Please enter radius: ");
-	cin >> r;
-	printf("Please enter x size: ");
-	cin >> x;
+	std::cin >> r;
 
-	CircleTable table = CirlceTable(r);
+	CircleTable table = CircleTable(r);
 
 	Vector initial, velocity;
 
 	GetArgs(initial, velocity);
 
+	double angle = velocity.Arg();
+
 	FILE * file;
 
 	file = fopen("circout", "w");
+
+	printf("\nWriting to 'circout'...\n");
 
 	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "a", "vx", "vy");
 
@@ -163,16 +188,18 @@ void RunCirlce(int n)
 
 	fclose(file);
 
+	printf("Done!\n");
+
 	return;
 }
 
-void RunStadium(int n)
+void RunRectangle(int n)
 {
 	double y, x;
 	printf("Please enter y size: ");
-	cin >> y;
+	std::cin >> y;
 	printf("Please enter x size: ");
-	cin >> x;
+	std::cin >> x;
 
 	RectangleTable table = RectangleTable(x, y);
 
@@ -180,9 +207,13 @@ void RunStadium(int n)
 
 	GetArgs(initial, velocity);
 
+	double angle = velocity.Arg();
+
 	FILE * file;
 
 	file = fopen("rectout", "w");
+
+	printf("\nWriting to 'rectout'...\n");
 
 	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "a", "vx", "vy");
 
@@ -196,23 +227,25 @@ void RunStadium(int n)
 
 	fclose(file);
 
+	printf("Done!\n");
+
 	return;
 }
 
-void GetArgs(Vector & initial, vector & velocity)
+void GetArgs(Vector & initial, Vector & velocity)
 {
 	double iX, iY, vX, vY;
 
 	printf("Please enter initial x: ");
-	cin >> iX;
+	std::cin >> iX;
 	printf("Initial y: ");
-	cin >> iY;
+	std::cin >> iY;
 	printf("Initial x velocity: ");
-	cin >> vX;
+	std::cin >> vX;
 	printf("Initial y velocity: ");
-	cin >> vY;
+	std::cin >> vY;
 
-	intial = Vector(iX, iY);
+	initial = Vector(iX, iY);
 	velocity = Vector(vX, vY);
 
 	return; 
@@ -220,51 +253,54 @@ void GetArgs(Vector & initial, vector & velocity)
 
 void Help()
 {
-	printf("\nThis program simulates billiard balls bouncing off the walls of a billiards 
-		\ntable. The four options correspond to the different types of table available.
-		\nEach table has a seperate geometry which you will be asked to specify, although
-		\nevery table has a centre at (0,0).
-		\n
-		\nEnter a menu choice (1 - 5) to see details for a table or to exit help.\n");
+	printf("\nThis program simulates billiard balls bouncing off the walls of a billiards"); 
+	printf("\ntable. The four options correspond to the different types of table available.");
+	printf("\nEach table has a seperate geometry which you will be asked to specify, although");
+	printf("\nevery table has a centre at (0,0).");
+	printf("\n");
+	printf("\nEnter a menu choice (1 - 6) to see details for a table or to exit help: ");
 	while (true)
 	{
 		int choice;
-		while (!(std::cin >> choice) || choice < 1 || choice > 5)
+		while (!(std::cin >> choice) || choice < 1 || choice > 6)
 		{
 			printf("Enter a valid choice.\n");
 			std::cin.clear();
 			std::cin.ignore();
 		}
 	
-		if (choice == 5) break;
+		if (choice == 6) break;
 
 		switch (choice)
 		{
 			case 1:
-				printf("\nThe stadium table is a rectangular table with semi-circles attached to each end\n
-					(the x axis ends, see this handy diagram: (|||) ).\n
-					\n
-					The x and y geometry of the table (which is input by the user) corresponds to\n
-					the poisition of the top most corner of the rectangular part of the table.\n
-					I.e. the length of the rectangular table is 2x, and the width is 2y. The radius\n
-					of the semi-circles is then y, and the maximum length of the table is 2xy.\n\n");
+				printf("\nThe stadium table is a rectangular table with semi-circles attached to each end\n");
+				printf("(the x axis ends, see this handy diagram: (|||) ).\n");
+				printf("\n");
+				printf("The x and y geometry of the table (which is input by the user) corresponds to\n");
+				printf("the poisition of the top most corner of the rectangular part of the table.\n");
+				printf("I.e. the length of the rectangular table is 2x, and the width is 2y. The radius\n");
+				printf("of the semi-circles is then y, and the maximum length of the table is 2xy.\n\n");
 				break;				
 			case 2:
-				printf("\nThe elliptical table is parameterised by two coefficients and a radius,\n
-					following the equation (x/a)^2 + (y/b)^2 = r^2. With a and b as the x and y\n
-					coefficients respectively.\n"
+				printf("\nThe elliptical table is parameterised by two coefficients and a radius,\n");
+				printf("following the equation (x/a)^2 + (y/b)^2 = r^2. With a and b as the x and y\n");
+				printf("coefficients respectively.\n\n");
 				break;
 			case 3:
-				printf("\nThe circular table's geometry is parameterised by a single value, its radius.\n
-					The circle then follows the equation x^2 + y^2 = r^2.\n");
+				printf("\nThe circular table's geometry is parameterised by a single value, its radius.\n");
+				printf("The circle then follows the equation x^2 + y^2 = r^2.\n\n");
 				break;
 			case 4:
-				printf("\nThe rectangular table's geometry is specified by the coordinate of its top right\n
-					coordinate. I.e. x and y are input, which corresponds to a table with length 2x\n
-					and width 2y.\n");
+				printf("\nThe rectangular table's geometry is specified by the coordinate of its top right\n");
+				printf("coordinate. I.e. x and y are input, which corresponds to a table with length 2x\n");
+				printf("and width 2y.\n\n");
+				break;
+			case 5:
+				printf("\n'Help' displays above message and then prompts for further help or to quit.\n\n");
 				break;
 		}
 		
-		printf("Enter a menu choice (1 - 50 to see details for a table or to exit help.\n");
+		printf("Enter a menu choice (1 - 6) to see details for a table or to exit help: ");
 	}
 }
