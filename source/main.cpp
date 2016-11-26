@@ -16,6 +16,8 @@ void RunCircle(int n);
 
 void RunRectangle(int n);
 
+void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE * file);
+
 void GetArgs(Vector & initial, Vector & velocity);
 
 void Help();
@@ -28,12 +30,12 @@ int main()
 		printf("# Billiards Simulation #\n");
 		printf("########################\n\n");
 
-		printf("(1) Stadium Table.\n");
-		printf("(2) Elliptical Table.\n");
-		printf("(3) Circular Table.\n");
-		printf("(4) Rectangular Table.\n");
-		printf("(5) Help.\n");
-		printf("(6) Exit.\n");
+		printf("(1) Stadium Table\n");
+		printf("(2) Elliptical Table\n");
+		printf("(3) Circular Table\n");
+		printf("(4) Rectangular Table\n");
+		printf("(5) Help\n");
+		printf("(6) Exit\n");
 
 		printf("Please enter a choice: ");
 		int choice;
@@ -90,23 +92,13 @@ void RunStadium(int n)
 
 	GetArgs(initial, velocity);
 
-	double angle = velocity.Arg();
-
 	FILE * file;
 
 	file = fopen("stadout", "w");
 
 	printf("\nWriting to 'stadout'...\n");
 
-	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "a", "vx", "vy");
-
-	for (int i = 0; i != n; i++)
-	{
-		fprintf(file, "%-10i%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f\n", i, initial.fX, initial.fY, angle, velocity.fX, velocity.fY);
-		initial = table.CollisionPoint(initial, velocity);
-		angle = std::fmod(table.AngleIncidence(initial, velocity), 2*M_PI);
-		velocity = table.ReflectVector(initial, velocity);
-	}
+	InnerRun(table, initial, velocity, n, file);
 
 	fclose(file);
 
@@ -131,23 +123,13 @@ void RunEllipse(int n)
 
 	GetArgs(initial, velocity);
 
-	double angle = velocity.Arg();
-
 	FILE * file;
 
 	file = fopen("elipout", "w");
 
 	printf("\nWriting to 'elipout'...\n");
 
-	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "a", "vx", "vy");
-
-	for (int i = 0; i != n; i++)
-	{
-		fprintf(file, "%-10i%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f\n", i, initial.fX, initial.fY, angle, velocity.fX, velocity.fY);
-		initial = table.CollisionPoint(initial, velocity);
-		angle = std::fmod(table.AngleIncidence(initial, velocity), 2*M_PI);
-		velocity = table.ReflectVector(initial, velocity);
-	}
+	InnerRun(table, initial, velocity, n, file);
 
 	fclose(file);
 
@@ -168,24 +150,14 @@ void RunCircle(int n)
 
 	GetArgs(initial, velocity);
 
-	double angle = velocity.Arg();
-
 	FILE * file;
 
 	file = fopen("circout", "w");
 
 	printf("\nWriting to 'circout'...\n");
 
-	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "a", "vx", "vy");
-
-	for (int i = 0; i != n; i++)
-	{
-		fprintf(file, "%-10i%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f\n", i, initial.fX, initial.fY, angle, velocity.fX, velocity.fY);
-		initial = table.CollisionPoint(initial, velocity);
-		angle = std::fmod(table.AngleIncidence(initial, velocity), 2*M_PI);
-		velocity = table.ReflectVector(initial, velocity);
-	}
-
+	InnerRun(table, initial, velocity, n, file);
+	
 	fclose(file);
 
 	printf("Done!\n");
@@ -207,29 +179,34 @@ void RunRectangle(int n)
 
 	GetArgs(initial, velocity);
 
-	double angle = velocity.Arg();
-
 	FILE * file;
 
 	file = fopen("rectout", "w");
 
 	printf("\nWriting to 'rectout'...\n");
 
-	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "a", "vx", "vy");
-
-	for (int i = 0; i != n; i++)
-	{
-		fprintf(file, "%-10i%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f\n", i, initial.fX, initial.fY, angle, velocity.fX, velocity.fY);
-		initial = table.CollisionPoint(initial, velocity);
-		angle = std::fmod(table.AngleIncidence(initial, velocity), 2*M_PI);
-		velocity = table.ReflectVector(initial, velocity);
-	}
-
+	InnerRun(table, initial, velocity, n, file);
+	
 	fclose(file);
 
 	printf("Done!\n");
 
 	return;
+}
+
+void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE * file)
+{
+	double angle = velocity.Arg();
+
+	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "mp", "a", "vx", "vy");
+
+	for (int i = 0; i != n; i++)
+	{
+		fprintf(file, "%-10i%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f\n", i, position.fX, position.fY, position.Mod(), angle, velocity.fX, velocity.fY);
+		position = table.CollisionPoint(position, velocity);
+		angle = std::fmod(table.AngleIncidence(position, velocity), 2*M_PI);
+		velocity = table.ReflectVector(position, velocity);
+	}
 }
 
 void GetArgs(Vector & initial, Vector & velocity)
@@ -258,7 +235,7 @@ void Help()
 	printf("\nEach table has a seperate geometry which you will be asked to specify, although");
 	printf("\nevery table has a centre at (0,0).");
 	printf("\n");
-	printf("\nEnter a menu choice (1 - 6) to see details for a table or to exit help: ");
+	printf("\nEnter a menu choice (1 - 6) to see details or to exit help: ");
 	while (true)
 	{
 		int choice;

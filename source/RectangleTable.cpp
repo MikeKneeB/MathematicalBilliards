@@ -138,13 +138,12 @@ Vector RectangleTable::CollisionPoint(const Vector & initial, const Vector & vel
 		double y = initial.fY + gamma * velocity.fY;
 		return Vector(fX, y);
 	}
-	else if (velocity.fX > 0)
+	else if (velocity.fX < 0)
 	// x = -fX:
 	{
 		gamma = (-fX - initial.fX)/velocity.fX;
 		double y = initial.fY + gamma * velocity.fY;
 		return Vector(-fX, y);
 	}
-
 	return Vector(0,0);
 }
