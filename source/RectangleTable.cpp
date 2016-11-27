@@ -100,6 +100,7 @@ Vector RectangleTable::ReflectVector(const Vector & collision, const Vector & ve
 	else if (collision.fY == -fY)
 		norm = Vector(0,1);
 
+	// Reflect velocity in surface normal.
 	temp = velocity - 2*velocity.Dot(norm)*norm;	
 	return temp;
 }
@@ -111,7 +112,7 @@ Vector RectangleTable::CollisionPoint(const Vector & initial, const Vector & vel
 	if (velocity.fY > 0)
 	// Set y = fY:
 	{
-		//p = i + gv
+		//p = i + gv, solving for g.
 		gamma = (fY - initial.fY)/velocity.fY;
 		double x = initial.fX + gamma * velocity.fX;
 		if (x <= fX && x >= -fX)

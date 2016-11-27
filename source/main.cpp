@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <iostream>
 #include <cmath>
+#include <random>
+#include <ctime>
 
 #include "StadiumTable.h"
 #include "EllipseTable.h"
@@ -20,17 +22,19 @@ void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE 
 
 void GetArgs(Vector & initial, Vector & velocity);
 
+void RandomArgs(Vector & initial, Vector & velocity, int type, double params[]);
+
 void Help();
 
 int main()
 {
+	printf("\n########################\n");
+	printf("# Billiards Simulation #\n");
+	printf("########################\n");
+
 	while (true)
 	{
-		printf("\n########################\n");
-		printf("# Billiards Simulation #\n");
-		printf("########################\n\n");
-
-		printf("(1) Stadium Table\n");
+		printf("\n(1) Stadium Table\n");
 		printf("(2) Elliptical Table\n");
 		printf("(3) Circular Table\n");
 		printf("(4) Rectangular Table\n");
@@ -42,7 +46,7 @@ int main()
 
 		while (!(std::cin >> choice) || choice < 1 || choice > 6)
 		{
-			printf("Enter a valid choice.\n");
+			printf("Enter a valid choice: ");
 			std::cin.clear();
 			std::cin.ignore();
 		}
@@ -90,7 +94,26 @@ void RunStadium(int n)
 
 	Vector initial, velocity;
 
-	GetArgs(initial, velocity);
+	bool choice;
+
+	printf("Enter 1 for random args, and 0 for user-input args: ");
+
+	while (!(std::cin >> choice))
+	{
+		std::cin.clear();
+		std::cin.ignore();
+		printf("Please enter a valid choice: ");
+	}
+
+	if (choice)
+	{
+		double params[2] = {x, y};
+		RandomArgs(initial, velocity, 4, params);
+	}
+	else
+	{
+		GetArgs(initial, velocity);
+	}
 
 	FILE * file;
 
@@ -121,7 +144,26 @@ void RunEllipse(int n)
 
 	Vector initial, velocity;
 
-	GetArgs(initial, velocity);
+	bool choice;
+
+	printf("Enter 1 for random args, and 0 for user-input args: ");
+
+	while (!(std::cin >> choice))
+	{
+		std::cin.clear();
+		std::cin.ignore();
+		printf("Please enter a valid choice: ");
+	}
+
+	if (choice)
+	{
+		double params[3] = {r, x, y};
+		RandomArgs(initial, velocity, 2, params);
+	}
+	else
+	{
+		GetArgs(initial, velocity);
+	}
 
 	FILE * file;
 
@@ -148,7 +190,26 @@ void RunCircle(int n)
 
 	Vector initial, velocity;
 
-	GetArgs(initial, velocity);
+	bool choice;
+
+	printf("Enter 1 for random args, and 0 for user-input args: ");
+
+	while (!(std::cin >> choice))
+	{
+		std::cin.clear();
+		std::cin.ignore();
+		printf("Please enter a valid choice: ");
+	}
+
+	if (choice)
+	{
+		double params[1] = {r};
+		RandomArgs(initial, velocity, 1, params);
+	}
+	else
+	{
+		GetArgs(initial, velocity);
+	}
 
 	FILE * file;
 
@@ -177,7 +238,27 @@ void RunRectangle(int n)
 
 	Vector initial, velocity;
 
-	GetArgs(initial, velocity);
+	bool choice;
+
+	printf("Enter 1 for random args, or 0 for user-input args: ");
+
+	while (!(std::cin >> choice))
+	{
+		std::cin.clear();
+		std::cin.ignore();
+		printf("Please enter a valid choice: ");
+	}
+
+	if (choice)
+	{
+		double params[2] = {x, y};
+		RandomArgs(initial, velocity, 3, params);
+	}
+	else
+	{
+		GetArgs(initial, velocity);
+	}
+
 
 	FILE * file;
 
@@ -198,11 +279,11 @@ void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE 
 {
 	double angle = velocity.Arg();
 
-	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "mp", "a", "vx", "vy");
+	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "mp", "a", "vx", "vy", "va");
 
 	for (int i = 0; i != n; i++)
 	{
-		fprintf(file, "%-10i%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f\n", i, position.fX, position.fY, position.Mod(), angle, velocity.fX, velocity.fY);
+		fprintf(file, "%-10i%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f\n", i, position.fX, position.fY, position.Mod(), angle, velocity.fX, velocity.fY, velocity.Arg());
 		position = table.CollisionPoint(position, velocity);
 		angle = std::fmod(table.AngleIncidence(position, velocity), 2*M_PI);
 		velocity = table.ReflectVector(position, velocity);
@@ -226,6 +307,97 @@ void GetArgs(Vector & initial, Vector & velocity)
 	velocity = Vector(vX, vY);
 
 	return; 
+}
+
+void RandomArgs(Vector & initial, Vector & velocity, int type, double params[])
+{
+	std::default_random_engine engine;
+	engine.seed(std::time(0));
+
+	double temp, iX, iY;
+	
+	if (type == 1)
+	{
+		std::uniform_real_distribution<double> rangeX(-params[0], params[0]);
+		iX = rangeX(engine);
+
+		temp = std::sqrt(params[0] * params[0] - iX * iX);
+
+		std::uniform_real_distribution<double> rangeY(-temp, temp);
+		iY = rangeY(engine);
+	}
+	else if (type == 2)
+	{
+		temp = params[0] * params[1];
+		std::uniform_real_distribution<double> rangeX(-temp, temp);
+		iX = rangeX(engine);
+
+		temp = params[2] * std::sqrt(params[0] * params[0] - (iX * iX)/(params[1] * params[1]));
+
+		std::uniform_real_distribution<double> rangeY(-temp, temp);
+		iY = rangeY(engine);
+
+	}
+	else if (type == 3)
+	{
+		std::uniform_real_distribution<double> rangeX(-params[0], params[0]);
+		std::uniform_real_distribution<double> rangeY(-params[1], params[1]);
+		iX = rangeX(engine);
+		iY = rangeY(engine);
+
+	}
+	else if (type == 4)
+	{
+		std::uniform_real_distribution<double> rangeX(-params[0] - params[1], params[0] + params[1]);
+
+		iX = rangeX(engine);
+
+		if (iX > params[0])
+		{
+			temp = iX - params[0];
+
+			temp = std::sqrt(params[1] * params[1] - temp * temp);
+
+			std::uniform_real_distribution<double> rangeY(-temp, temp);
+			iY = rangeY(engine);
+
+		}
+		else if (iX < -params[0])
+		{
+			temp = iX + params[0];
+
+			temp = std::sqrt(params[1] * params[1] - temp * temp);
+
+			std::uniform_real_distribution<double> rangeY(-temp, temp);
+			iY = rangeY(engine);
+
+		}
+		else
+		{
+			std::uniform_real_distribution<double> rangeY(-params[1], params[1]);
+			iY = rangeY(engine);
+		}
+	}
+	else
+	{
+		printf("NO\n");
+		iY = 0;
+		iX = 0;
+	}
+
+	initial.fX = iX;
+	initial.fY = iY;
+	
+	velocity = Vector(0.0, 0.0);
+	std::uniform_real_distribution<double> rangeV(-1,1);
+
+	while (velocity.fX == 0.0 && velocity.fY == 0.0)
+	{
+		velocity.fX = rangeV(engine);
+		velocity.fY = rangeV(engine);
+	}
+
+	return;
 }
 
 void Help()
