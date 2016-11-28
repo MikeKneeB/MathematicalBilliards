@@ -14,7 +14,7 @@ CircleTable::~CircleTable()
 
 double CircleTable::AngleIncidence(const Vector & collision, const Vector & velocity)
 {
-	return collision.Arg() - velocity.Arg();
+	return M_PI - collision.Arg() - velocity.Arg();
 }
 
 Vector CircleTable::ReflectVector(const Vector & collision, const Vector & velocity)

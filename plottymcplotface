@@ -2,19 +2,37 @@ if (!exists("fname")) fname='stadout'
 
 set grid
 
+print 'Plotting x against y (ball path).'
 set term x11 0
 plot fname using 'x':'y' with lines title 'x y'
+pause -1
 
-set term x11 1
+print 'Plotting vx against vy.'
+set term x11 0
 plot fname using 'vx':'vy' with lines title 'vx vy'
+pause -1
 
-set term x11 2
+print 'Plotting modulus of position against angle between velocity and surface normal.'
+set term x11 0
 plot fname using 'mp':'a' with lines title 'mp a'
+pause -1
 
-set term x11 3
+print 'Plotting iteration no. against angle between v and s.n.'
+set term x11 0
 plot fname using 'i':'a' with lines title 'i a'
+pause -1
 
-set term x11 4
+print 'Plotting mod position against velocity angle.'
+set term x11 0
 plot fname using 'mp':'va' with lines title 'mp va'
+pause -1
 
+print 'Plotting position angle against velocity angle.'
+set term x11 0
+plot fname using 'pa':'va' with lines title 'pa va'
+pause -1
+
+print 'Plotting x against vx and y against vy.'
+set term x11 0
+plot fname using 'x':'vx' with lines title 'x vx', fname using 'y':'vy' with lines title 'y vy'
 pause -1

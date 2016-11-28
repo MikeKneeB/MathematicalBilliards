@@ -76,7 +76,9 @@ void GetArgs(Vector & initial, Vector & velocity);
  * The type of billiard table must be specified using the parameter type. The
  * three options are: 1=circular 2= elliptical 3=rectangular 4=stadium. The
  * parameter params must contain the necessary number of parameters defining
- * the geometry of the table.
+ * the geometry of the table. For the rectangular and stadium tables this is
+ * an array with two values, for the circular table just one and three for the
+ * elliptical table.
  *
  * Vector & initial: Vector to store initial position in.
  * Vector & velocity: Vector to store initial velocity in.
@@ -343,11 +345,13 @@ void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE 
 {
 	double angle = velocity.Arg();
 
-	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "mp", "a", "vx", "vy", "va");
+	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "mp", "pa", "a", "vx", "vy", "mv", "va");
 
 	for (int i = 0; i != n; i++)
 	{
-		fprintf(file, "%-10i%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f\n", i, position.fX, position.fY, position.Mod(), angle, velocity.fX, velocity.fY, velocity.Arg());
+		fprintf(file, "%-10i%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f\n", 
+			i, position.fX, position.fY, position.Mod(), std::fmod(position.Arg(), 2*M_PI),
+			angle, velocity.fX, velocity.fY, velocity.Mod(), std::fmod(velocity.Arg(), 2*M_PI));
 		position = table.CollisionPoint(position, velocity);
 		angle = std::fmod(table.AngleIncidence(position, velocity), 2*M_PI);
 		velocity = table.ReflectVector(position, velocity);

@@ -18,7 +18,7 @@ double EllipseTable::AngleIncidence(const Vector & collision, const Vector & vel
 
 	theta = std::atan((collision.fY * fXCoef * fXCoef)/(collision.fX * fYCoef * fYCoef));
 
-	return theta - velocity.Arg();
+	return M_PI - theta - velocity.Arg();
 }
 
 Vector EllipseTable::ReflectVector(const Vector & collision, const Vector & velocity)

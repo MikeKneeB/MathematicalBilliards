@@ -36,31 +36,31 @@ double RectangleTable::AngleIncidence(const Vector & collision, const Vector & v
 		// Check corner cases.
 		if (collision.fY == fY)
 		{
-			return M_PI/4 - velocity.Arg();
+			return -3*M_PI - velocity.Arg();
 		}
 		else if (collision.fY == -fY)
 		{
-			return -M_PI/4 - velocity.Arg();
+			return 3*M_PI/4 - velocity.Arg();
 		}
-		return -velocity.Arg();
+		return M_PI - velocity.Arg();
 	}
 	else if (collision.fX == -fX)
 	{
 		if (collision.fY == fY)
 		{
-			return 3*M_PI/4 - velocity.Arg();
+			return -M_PI/4 - velocity.Arg();
 		}
 		else if (collision.fY == -fY)
 		{
-			return -3*M_PI/4 - velocity.Arg();
+			return M_PI/4 - velocity.Arg();
 		}
-		return M_PI - velocity.Arg();
+		return -velocity.Arg();
 	}
 	// No need to check corner cases now, as they would already have been caught.
 	else if (collision.fY == fY)
-		return M_PI/2 - velocity.Arg();
+		return -M_PI/2 - velocity.Arg();
 	else if (collision.fY == -fY)
-		return 3*M_PI/2 - velocity.Arg();
+		return M_PI/2 - velocity.Arg();
 
 	return 0;
 }

@@ -1,7 +1,7 @@
 #ifndef _ITABLE_H
 #define _ITABLE_H
 
-#define M_PI 3.141592653589793238
+/*#define M_PI 3.141592653589793238*/
 
 /**
  * Interface for all billiard tables.
