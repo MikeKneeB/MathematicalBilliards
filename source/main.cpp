@@ -19,6 +19,8 @@
  */
 void RunStadium(int n);
 
+void StadiumFractal();
+
 /**
  * RunEllipse similarly creates an elliptical table and initialises the
  * simulation, which is run n times with data output to 'elipout'.
@@ -194,6 +196,39 @@ void RunStadium(int n)
 	printf("Done!\n");
 
 	return;
+}
+
+void StadiumFractal()
+{
+	double y, x, theta, pLength;
+	printf("Please enter y size: ");
+	std::cin >> y;
+	printf("Please enter x size: ");
+	std::cin >> x;
+
+	StadiumTable table = StadiumTable(x, y);
+
+	Vector initial(x + y - 0.00001, 0);
+	Vector velocity(1, 0);
+	Vector position = initial;
+
+	FILE * file;
+	file = fopen("stadfrac", "w");
+
+	fprintf("%-20s%-20s%-20s", "pLength", "angle", "something...");
+
+	for (int i = 0; i != 1000; i++)
+	{
+		theta = (M_PI / 2) * (i / 1000);
+		for (int j = 0; j != 10; i++)
+		{
+			pLength += position - table.CollisionPoint(position, velocity);
+			position = table.CollisionPoint(position, velocity);
+			// etc.
+		}
+		velocity = velocity.Rotate(M_PI/(2000));
+	}
+	fclose(file); 
 }
 
 void RunEllipse(int n)

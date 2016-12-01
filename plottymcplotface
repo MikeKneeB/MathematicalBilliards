@@ -14,7 +14,7 @@ pause -1
 
 print 'Plotting modulus of position against angle between velocity and surface normal.'
 set term x11 0
-plot fname using 'mp':'a' with lines title 'mp a'
+plot fname every ::1 using 'mp':'a' with lines title 'mp a'
 pause -1
 
 print 'Plotting iteration no. against angle between v and s.n.'
@@ -24,12 +24,12 @@ pause -1
 
 print 'Plotting mod position against velocity angle.'
 set term x11 0
-plot fname using 'mp':'va' with lines title 'mp va'
+plot fname every ::1 using 'mp':'va' with lines title 'mp va'
 pause -1
 
 print 'Plotting position angle against velocity angle.'
 set term x11 0
-plot fname using 'pa':'va' with lines title 'pa va'
+plot fname every ::1 using 'pa':'va' with lines title 'pa va'
 pause -1
 
 print 'Plotting x against vx and y against vy.'
