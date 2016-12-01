@@ -106,24 +106,25 @@ int main()
 		printf("(2) Elliptical Table\n");
 		printf("(3) Circular Table\n");
 		printf("(4) Rectangular Table\n");
-		printf("(5) Help\n");
-		printf("(6) Exit\n");
+		printf("(5) Stadium fractal phase plot.\n");
+		printf("(6) Help\n");
+		printf("(7) Exit\n");
 
 		printf("Please enter a choice: ");
 		int choice;
 
-		while (!(std::cin >> choice) || choice < 1 || choice > 6)
+		while (!(std::cin >> choice) || choice < 1 || choice > 7)
 		{
 			printf("Enter a valid choice: ");
 			std::cin.clear();
 			std::cin.ignore();
 		}
 		
-		if (choice == 6) break;
+		if (choice == 7) break;
 
 		int n = 0;
 
-		if (choice != 5)
+		if (choice < 5)
 		{
 			printf("Please enter number of iterations: ");
 			std::cin >> n;
@@ -143,8 +144,11 @@ int main()
 			case 4:
 				RunRectangle(n);
 				break;
-			case 5:
+			case 6:
 				Help();
+				break;
+			case 5:
+				StadiumFractal();
 				break;
 		}
 	}
@@ -200,7 +204,7 @@ void RunStadium(int n)
 
 void StadiumFractal()
 {
-	double y, x, theta, pLength;
+	double y, x, theta, pLength = 0, tLength;
 	printf("Please enter y size: ");
 	std::cin >> y;
 	printf("Please enter x size: ");
@@ -209,25 +213,44 @@ void StadiumFractal()
 	StadiumTable table = StadiumTable(x, y);
 
 	Vector initial(x + y - 0.00001, 0);
-	Vector velocity(1, 0);
+	Vector vInitial(-1, 0);
 	Vector position = initial;
+	Vector velocity = vInitial;
 
 	FILE * file;
-	file = fopen("stadfrac", "w");
+	file = fopen("fracstadout", "w");
+	printf("Writing to file fracstadout...\n");
 
-	fprintf("%-20s%-20s%-20s", "pLength", "angle", "something...");
+	fprintf(file, "%-20s%-20s%-20s\n", "i", "pLength", "angle");
 
 	for (int i = 0; i != 1000; i++)
 	{
-		theta = (M_PI / 2) * (i / 1000);
-		for (int j = 0; j != 10; i++)
+		theta = -M_PI + (2 * M_PI) * (1.0 * i / 1000);
+		for (int j = 0; j != 10; j++)
 		{
-			pLength += position - table.CollisionPoint(position, velocity);
+			tLength = (position - table.CollisionPoint(position, velocity)).Mod();
+			printf("%f ", tLength);
+			if (theta < M_PI/2 || theta > -M_PI/2)
+			{
+				printf("+\n");
+				pLength += tLength;
+			}
+			else
+			{
+				printf("-\n");
+				pLength -= tLength;
+			}
 			position = table.CollisionPoint(position, velocity);
-			// etc.
+			velocity = table.ReflectVector(position, velocity);
+			fprintf(file, "%-20i%-20.15f%-20.15f\n", j, pLength, theta);
 		}
-		velocity = velocity.Rotate(M_PI/(2000));
+		position = initial;
+		vInitial = vInitial.Rotate(-M_PI/(500));
+		velocity = vInitial;
+		pLength = 0;
 	}
+
+	printf("Done!\n");
 	fclose(file); 
 }
 
@@ -510,18 +533,18 @@ void Help()
 	printf("\nEach table has a seperate geometry which you will be asked to specify, although");
 	printf("\nevery table has a centre at (0,0).");
 	printf("\n");
-	printf("\nEnter a menu choice (1 - 6) to see details or to exit help: ");
+	printf("\nEnter a menu choice (1 - 7) to see details or to exit help: ");
 	while (true)
 	{
 		int choice;
-		while (!(std::cin >> choice) || choice < 1 || choice > 6)
+		while (!(std::cin >> choice) || choice < 1 || choice > 7)
 		{
 			printf("Enter a valid choice.\n");
 			std::cin.clear();
 			std::cin.ignore();
 		}
 	
-		if (choice == 6) break;
+		if (choice == 7) break;
 
 		switch (choice)
 		{
@@ -549,6 +572,9 @@ void Help()
 				printf("and width 2y.\n\n");
 				break;
 			case 5:
+				printf("\nProduces data for a phase plot of initial angle against path length. This should\n");
+				printf("produce fractal images, he says very hopefully...\n\n");
+			case 6:
 				printf("\n'Help' displays above message and then prompts for further help or to quit.\n\n");
 				break;
 		}
