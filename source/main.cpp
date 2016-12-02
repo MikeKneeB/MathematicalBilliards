@@ -19,7 +19,7 @@
  */
 void RunStadium(int n);
 
-void StadiumFractal();
+void StadiumFractal(int n);
 
 /**
  * RunEllipse similarly creates an elliptical table and initialises the
@@ -59,6 +59,8 @@ void RunRectangle(int n);
  * FILE * file: file stream to write to.
  */
 void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE * file);
+
+void InnerFrac(ITable & table, Vector & position, Vector & velocity, int n, FILE * file);
 
 /**
  * Initialises vector position and velocity of the billiard ball, by asking
@@ -124,7 +126,7 @@ int main()
 
 		int n = 0;
 
-		if (choice < 5)
+		if (choice != 6)
 		{
 			printf("Please enter number of iterations: ");
 			std::cin >> n;
@@ -148,7 +150,7 @@ int main()
 				Help();
 				break;
 			case 5:
-				StadiumFractal();
+				StadiumFractal(n);
 				break;
 		}
 	}
@@ -202,9 +204,9 @@ void RunStadium(int n)
 	return;
 }
 
-void StadiumFractal()
+void StadiumFractal(int n)
 {
-	double y, x, theta, pLength = 0, tLength;
+	double y, x;
 	printf("Please enter y size: ");
 	std::cin >> y;
 	printf("Please enter x size: ");
@@ -212,10 +214,9 @@ void StadiumFractal()
 
 	StadiumTable table = StadiumTable(x, y);
 
-	Vector initial(x + y - 0.00001, 0);
-	Vector vInitial(-1, 0);
-	Vector position = initial;
-	Vector velocity = vInitial;
+	Vector position(x + y - 0.00001, 0);
+
+	Vector velocity(-1, 0);
 
 	FILE * file;
 	file = fopen("fracstadout", "w");
@@ -223,32 +224,7 @@ void StadiumFractal()
 
 	fprintf(file, "%-20s%-20s%-20s\n", "i", "pLength", "angle");
 
-	for (int i = 0; i != 1000; i++)
-	{
-		theta = -M_PI + (2 * M_PI) * (1.0 * i / 1000);
-		for (int j = 0; j != 10; j++)
-		{
-			tLength = (position - table.CollisionPoint(position, velocity)).Mod();
-			printf("%f ", tLength);
-			if (theta < M_PI/2 || theta > -M_PI/2)
-			{
-				printf("+\n");
-				pLength += tLength;
-			}
-			else
-			{
-				printf("-\n");
-				pLength -= tLength;
-			}
-			position = table.CollisionPoint(position, velocity);
-			velocity = table.ReflectVector(position, velocity);
-			fprintf(file, "%-20i%-20.15f%-20.15f\n", j, pLength, theta);
-		}
-		position = initial;
-		vInitial = vInitial.Rotate(-M_PI/(500));
-		velocity = vInitial;
-		pLength = 0;
-	}
+	InnerFrac(table, position, velocity, n, file);
 
 	printf("Done!\n");
 	fclose(file); 
@@ -413,6 +389,35 @@ void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE 
 		position = table.CollisionPoint(position, velocity);
 		angle = std::fmod(table.AngleIncidence(position, velocity), 2*M_PI);
 		velocity = table.ReflectVector(position, velocity);
+	}
+}
+
+void InnerFrac(ITable & table, Vector & position, Vector & velocity, int n, FILE * file)
+{
+	double tLength, pLength = 0, theta;
+
+	Vector initial = position;
+	Vector vInitial = velocity;
+
+	fprintf(file, "%-20s%-20s%-20s\n", "i", "pLength", "angle");
+
+	
+	for (int i = 0; i != n; i++)
+	{
+		theta = -M_PI + (2 * M_PI) * (1.0 * i / n);
+		for (int j = 0; j != 10; j++)
+		{
+			tLength = (position - table.CollisionPoint(position, velocity)).Mod();
+			pLength += tLength;
+
+			position = table.CollisionPoint(position, velocity);
+			velocity = table.ReflectVector(position, velocity);
+			fprintf(file, "%-20i%-20.15f%-20.15f\n", j, pLength, theta);
+		}
+		position = initial;
+		vInitial = vInitial.Rotate(-M_PI*2/n);
+		velocity = vInitial;
+		pLength = 0;
 	}
 }
 

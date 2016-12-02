@@ -2,7 +2,7 @@ if (!exists("fname")) fname='stadout'
 set grid
 
 if (fname[:4] eq 'frac') {
-	print "Look mommy, a fractal! Don't look jimmy, or you'll begin to exhibit self-similarity."
+	print "Look mommy, a fractal!\nDon't look jimmy, or you'll begin to exhibit self-similarity."
 	set term x11 0
 	plot fname using 'pLength':'angle' with points pointtype 0
 	pause -1
