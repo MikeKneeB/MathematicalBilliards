@@ -3,6 +3,7 @@
 #include <cmath>
 #include <random>
 #include <ctime>
+#include <string>
 
 #include "StadiumTable.h"
 #include "EllipseTable.h"
@@ -230,9 +231,13 @@ void StadiumFractal(int n)
 	printf("Please enter x size: ");
 	std::cin >> x;
 
+	double offset;
+	printf("Please enter offset from table edge (rec ~ 0.00001): ");
+	std::cin >> offset;
+
 	StadiumTable table = StadiumTable(x, y);
 
-	Vector position(x + y - 0.00001, 0);
+	Vector position(x + y - offset, 0);
 
 	Vector velocity(-1, 0);
 
@@ -295,6 +300,7 @@ void RunEllipse(int n)
 
 	return;
 }
+
 void EllipticalFractal(int n)
 {
 	double y, x, r;
@@ -305,9 +311,13 @@ void EllipticalFractal(int n)
 	printf("Please enter radius: ");
 	std::cin >> r;
 
+	double offset;
+	printf("Please enter offset from table edge (rec ~ 0.00001): ");
+	std::cin >> offset;
+
 	EllipseTable table = EllipseTable(r, x, y);
 
-	Vector position(r*x - 0.00001, 0);
+	Vector position(r*x - offset, 0);
 
 	Vector velocity(-1, 0);
 
@@ -320,7 +330,6 @@ void EllipticalFractal(int n)
 	printf("Done!\n");
 	fclose(file); 
 }
-
 
 void RunCircle(int n)
 {
@@ -374,9 +383,13 @@ void CircularFractal(int n)
 	printf("Please enter radius: ");
 	std::cin >> r;
 
+	double offset;
+	printf("Please enter offset from table edge (rec ~ 0.00001): ");
+	std::cin >> offset;
+
 	CircleTable table = CircleTable(r);
 
-	Vector position(r - 0.00001, 0);
+	Vector position(r - offset, 0);
 
 	Vector velocity(-1, 0);
 
@@ -389,7 +402,6 @@ void CircularFractal(int n)
 	printf("Done!\n");
 	fclose(file); 
 }
-
 
 void RunRectangle(int n)
 {
@@ -448,9 +460,13 @@ void RectangularFractal(int n)
 	printf("Please enter x size: ");
 	std::cin >> x;
 
+	double offset;
+	printf("Please enter offset from table edge (rec ~ 0.00001): ");
+	std::cin >> offset;
+
 	RectangleTable table = RectangleTable(x, y);
 
-	Vector position(x - 0.00001, 0);
+	Vector position(x - offset, 0);
 
 	Vector velocity(-1, 0);
 
@@ -489,14 +505,13 @@ void InnerFrac(ITable & table, Vector & position, Vector & velocity, int n, FILE
 	Vector vInitial = velocity;
 
 	Vector tPosition;
-
+	
 	fprintf(file, "%-20s%-20s%-20s%-20s%-20s\n", "i", "pLength", "angle", "xLength", "yLength");
-
 	
 	for (int i = 0; i != n; i++)
 	{
 		theta = -M_PI + (2 * M_PI) * (1.0 * i / n);
-		for (int j = 0; j != 10; j++)
+		for (int j = 0; j != 50; j++)
 		{
 			tPosition = table.CollisionPoint(position, velocity);
 			tLength = (position - tPosition).Mod();
