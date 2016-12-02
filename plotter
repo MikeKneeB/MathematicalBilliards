@@ -1,0 +1,9 @@
+#!/usr/bin/zsh
+
+if [[ $# == 0 ]]
+then
+	echo "No data file specified! Please enter data file as first argument."
+	exit 1
+else
+	gnuplot -e "fname='$1'" .plot.pgi
+fi

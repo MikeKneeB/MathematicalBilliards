@@ -1,0 +1,70 @@
+set grid
+
+if (fname[:4] eq 'frac') {
+	print "Phase plot distance travelled against initial velocity angle."
+	set term x11 0
+	set ylabel "Initial velocity angle"
+	set xlabel "Distance travelled"
+	plot fname using 'pLength':'angle' with points pt 0 title 'mod distance'
+	pause -1
+
+	print "Phase plot x/y distance travelled against velocity angle."
+	set term x11 0
+	plot fname using 'xLength':'angle' with points pt 0 title 'x distance', fname using 'yLength':'angle' with points pt 0 title 'y distance'
+	pause -1
+
+	print "Not very useful, but hopefully pretty fractal."
+	set term x11 0
+	plot fname using 'xVec':'yVec' with points pt 0 title 'x/y'
+	pause -1
+
+} else {
+	print 'Plotting x against y (ball path).'
+	set term x11 0
+	set ylabel "y"
+	set xlabel "x"
+	plot fname using 'x':'y' with lines title 'x y'
+	pause -1
+
+	print 'Plotting vx against vy.'
+	set term x11 0
+	set ylabel "vy"
+	set xlabel "vx"
+	plot fname using 'vx':'vy' with lines title 'vx vy'
+	pause -1
+
+	print 'Plotting modulus of position against angle between velocity and surface normal.'
+	set term x11 0
+	set ylabel "angle incidence"
+	set xlabel "modulus position"
+	plot fname every ::1 using 'mp':'a' with lines title 'mp a'
+	pause -1
+
+	print 'Plotting iteration no. against angle between v and s.n.'
+	set term x11 0
+	set ylabel "angle incidence"
+	set xlabel "iteration no."
+	plot fname using 'i':'a' with lines title 'i a'
+	pause -1
+
+	print 'Plotting mod position against velocity angle.'
+	set term x11 0
+	set ylabel "velocity angle"
+	set xlabel "modulus position"
+	plot fname every ::1 using 'mp':'va' with lines title 'mp va'
+	pause -1
+
+	print 'Plotting position angle against velocity angle.'
+	set term x11 0
+	set ylabel "velocity angle"
+	set xlabel "position angle"
+	plot fname every ::1 using 'pa':'va' with lines title 'pa va'
+	pause -1
+
+	print 'Plotting x against vx and y against vy.'
+	set term x11 0
+	set ylabel "velocity"
+	set xlabel "position"
+	plot fname using 'x':'vx' with lines title 'x vx', fname using 'y':'vy' with lines title 'y vy'
+	pause -1
+}
