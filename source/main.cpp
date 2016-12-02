@@ -29,6 +29,8 @@ void StadiumFractal(int n);
  */
 void RunEllipse(int n);
 
+void EllipticalFractal(int n);
+
 /**
  * As above, circular table and data output to 'circout'.
  *
@@ -36,12 +38,16 @@ void RunEllipse(int n);
  */
 void RunCircle(int n);
 
+void CircularFractal(int n);
+
 /**
  * As above, rectangular table and data output to 'rectout'.
  *
  * int n: iterations of the simulation to run.
  */
 void RunRectangle(int n);
+
+void RectangularFractal(int n);
 
 /**
  * InnerRun is called iternally by each of the Run functions, and performs the
@@ -108,25 +114,28 @@ int main()
 		printf("(2) Elliptical Table\n");
 		printf("(3) Circular Table\n");
 		printf("(4) Rectangular Table\n");
-		printf("(5) Stadium fractal phase plot.\n");
-		printf("(6) Help\n");
-		printf("(7) Exit\n");
+		printf("(5) Stadium Fractal\n");
+		printf("(6) Elliptical Fractal\n");
+		printf("(7) Circular Fractal\n");
+		printf("(8) Rectangular Fractal\n");
+		printf("(9) Help\n");
+		printf("(0) Exit\n");
 
 		printf("Please enter a choice: ");
 		int choice;
 
-		while (!(std::cin >> choice) || choice < 1 || choice > 7)
+		while (!(std::cin >> choice) || choice < 0 || choice > 9)
 		{
 			printf("Enter a valid choice: ");
 			std::cin.clear();
 			std::cin.ignore();
 		}
 		
-		if (choice == 7) break;
+		if (choice == 0) break;
 
 		int n = 0;
 
-		if (choice != 6)
+		if (choice != 9)
 		{
 			printf("Please enter number of iterations: ");
 			std::cin >> n;
@@ -146,11 +155,20 @@ int main()
 			case 4:
 				RunRectangle(n);
 				break;
-			case 6:
-				Help();
-				break;
 			case 5:
 				StadiumFractal(n);
+				break;
+			case 6:
+				EllipticalFractal(n);
+				break;
+			case 7:
+				CircularFractal(n);
+				break;
+			case 8:
+				RectangularFractal(n);
+				break;
+			case 9:
+				Help();
 				break;
 		}
 	}
@@ -222,8 +240,6 @@ void StadiumFractal(int n)
 	file = fopen("fracstadout", "w");
 	printf("Writing to file fracstadout...\n");
 
-	fprintf(file, "%-20s%-20s%-20s\n", "i", "pLength", "angle");
-
 	InnerFrac(table, position, velocity, n, file);
 
 	printf("Done!\n");
@@ -279,6 +295,32 @@ void RunEllipse(int n)
 
 	return;
 }
+void EllipticalFractal(int n)
+{
+	double y, x, r;
+	printf("Please enter y coefficient: ");
+	std::cin >> y;
+	printf("Please enter x coefficient: ");
+	std::cin >> x;
+	printf("Please enter radius: ");
+	std::cin >> r;
+
+	EllipseTable table = EllipseTable(r, x, y);
+
+	Vector position(r*x - 0.00001, 0);
+
+	Vector velocity(-1, 0);
+
+	FILE * file;
+	file = fopen("fracelipout", "w");
+	printf("Writing to file fracelipout...\n");
+
+	InnerFrac(table, position, velocity, n, file);
+
+	printf("Done!\n");
+	fclose(file); 
+}
+
 
 void RunCircle(int n)
 {
@@ -325,6 +367,29 @@ void RunCircle(int n)
 
 	return;
 }
+
+void CircularFractal(int n)
+{
+	double r;
+	printf("Please enter radius: ");
+	std::cin >> r;
+
+	CircleTable table = CircleTable(r);
+
+	Vector position(r - 0.00001, 0);
+
+	Vector velocity(-1, 0);
+
+	FILE * file;
+	file = fopen("fraccircout", "w");
+	printf("Writing to file fraccircout...\n");
+
+	InnerFrac(table, position, velocity, n, file);
+
+	printf("Done!\n");
+	fclose(file); 
+}
+
 
 void RunRectangle(int n)
 {
@@ -375,6 +440,30 @@ void RunRectangle(int n)
 	return;
 }
 
+void RectangularFractal(int n)
+{
+	double y, x;
+	printf("Please enter y size: ");
+	std::cin >> y;
+	printf("Please enter x size: ");
+	std::cin >> x;
+
+	RectangleTable table = RectangleTable(x, y);
+
+	Vector position(x - 0.00001, 0);
+
+	Vector velocity(-1, 0);
+
+	FILE * file;
+	file = fopen("fracrectout", "w");
+	printf("Writing to file fracrectout...\n");
+
+	InnerFrac(table, position, velocity, n, file);
+
+	printf("Done!\n");
+	fclose(file); 
+}
+
 void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE * file)
 {
 	double angle = velocity.Arg();
@@ -394,12 +483,14 @@ void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE 
 
 void InnerFrac(ITable & table, Vector & position, Vector & velocity, int n, FILE * file)
 {
-	double tLength, pLength = 0, theta;
+	double tLength, pLength = 0, xLength = 0, yLength = 0, theta;
 
 	Vector initial = position;
 	Vector vInitial = velocity;
 
-	fprintf(file, "%-20s%-20s%-20s\n", "i", "pLength", "angle");
+	Vector tPosition;
+
+	fprintf(file, "%-20s%-20s%-20s%-20s%-20s\n", "i", "pLength", "angle", "xLength", "yLength");
 
 	
 	for (int i = 0; i != n; i++)
@@ -407,17 +498,23 @@ void InnerFrac(ITable & table, Vector & position, Vector & velocity, int n, FILE
 		theta = -M_PI + (2 * M_PI) * (1.0 * i / n);
 		for (int j = 0; j != 10; j++)
 		{
-			tLength = (position - table.CollisionPoint(position, velocity)).Mod();
+			tPosition = table.CollisionPoint(position, velocity);
+			tLength = (position - tPosition).Mod();
 			pLength += tLength;
+
+			xLength += std::abs(position.fX - tPosition.fX);
+			yLength += std::abs(position.fY - tPosition.fY);
 
 			position = table.CollisionPoint(position, velocity);
 			velocity = table.ReflectVector(position, velocity);
-			fprintf(file, "%-20i%-20.15f%-20.15f\n", j, pLength, theta);
+			fprintf(file, "%-20i%-20.15f%-20.15f%-20.15f%-20.15f\n", j, pLength, theta, xLength, yLength);
 		}
 		position = initial;
 		vInitial = vInitial.Rotate(-M_PI*2/n);
 		velocity = vInitial;
 		pLength = 0;
+		xLength = 0;
+		yLength = 0;
 	}
 }
 
@@ -538,18 +635,21 @@ void Help()
 	printf("\nEach table has a seperate geometry which you will be asked to specify, although");
 	printf("\nevery table has a centre at (0,0).");
 	printf("\n");
-	printf("\nEnter a menu choice (1 - 7) to see details or to exit help: ");
+	printf("\nThe fractal choices produce data for a phase plot of initial velocity angle");
+	printf("\nagainst modulus distance travelled, which produces fractal results (usually).");
+	printf("\n");
+	printf("\nEnter a menu choice (0 - 9) to see details or to exit help: ");
 	while (true)
 	{
 		int choice;
-		while (!(std::cin >> choice) || choice < 1 || choice > 7)
+		while (!(std::cin >> choice) || choice < 0 || choice > 9)
 		{
 			printf("Enter a valid choice.\n");
 			std::cin.clear();
 			std::cin.ignore();
 		}
 	
-		if (choice == 7) break;
+		if (choice == 0) break;
 
 		switch (choice)
 		{
@@ -578,12 +678,21 @@ void Help()
 				break;
 			case 5:
 				printf("\nProduces data for a phase plot of initial angle against path length. This should\n");
-				printf("produce fractal images, he says very hopefully...\n\n");
+				printf("produce fractal imagesi...\n\n");
+				break;
 			case 6:
+				printf("\nPhase plot data for initial angle against path length.\n\n");
+				break;
+			case 7:
+				printf("\nPhase plot data for initial angle against path length.\n\n");
+				break;
+			case 8:
+				printf("\nPhase plot data for initial angle against path length.\n\n");
+				break;
+			case 9:
 				printf("\n'Help' displays above message and then prompts for further help or to quit.\n\n");
 				break;
 		}
-		
 		printf("Enter a menu choice (1 - 6) to see details for a table or to exit help: ");
 	}
 }

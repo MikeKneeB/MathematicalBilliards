@@ -4,7 +4,14 @@ set grid
 if (fname[:4] eq 'frac') {
 	print "Look mommy, a fractal!\nDon't look jimmy, or you'll begin to exhibit self-similarity."
 	set term x11 0
-	plot fname using 'pLength':'angle' with points pointtype 0
+	set ylabel "Initial velocity angle"
+	set xlabel "Distance travelled"
+	plot fname using 'pLength':'angle' with points pt 0 title 'mod distance'
+	pause -1
+
+	print "Oh god jimmy no!"
+	set term x11 0
+	plot fname using 'xLength':'angle' with points pt 0 title 'x distance', fname using 'yLength':'angle' with points pt 0 title 'y distance'
 	pause -1
 } else {
 	print 'Plotting x against y (ball path).'
