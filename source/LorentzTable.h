@@ -2,6 +2,7 @@
 
 class LorentzTable : public ITable
 {
+public:
 	LorentzTable();
 	LorentzTable(double x, double y, double radius);
 	~LorentzTable();

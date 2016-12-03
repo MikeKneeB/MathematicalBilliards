@@ -1,4 +1,5 @@
 #include <cmath>
+#include <cstdio>
 
 #include "LorentzTable.h"
 
@@ -132,50 +133,49 @@ Vector LorentzTable::CollisionPoint(const Vector & initial, const Vector & veloc
 	b = 2 * (initial.fX * velocity.fX + initial.fY * velocity.fY);
 	c = initial.fX * initial.fX + initial.fY * initial.fY - fRadius * fRadius;
 
+
 	if (b * b - 4 * a * c > 0)
 	{
-		gamma = (-b + std::sqrt(b * b - 4 * a * c))/(2 * a);
-		return initial + gamma * velocity;
+		gamma = (-b - std::sqrt(b * b - 4 * a * c))/(2 * a);
+		if (gamma > 0)
+			return initial + gamma * velocity;
 	}
-	else
+	if (velocity.fY > 0)
+	// Set y = fY:
 	{
-		if (velocity.fY > 0)
-		// Set y = fY:
+		//p = i + gv, solving for g.
+		gamma = (fY - initial.fY)/velocity.fY;
+		double x = initial.fX + gamma * velocity.fX;
+		if (x <= fX && x >= -fX)
 		{
-			//p = i + gv, solving for g.
-			gamma = (fY - initial.fY)/velocity.fY;
-			double x = initial.fX + gamma * velocity.fX;
-			if (x <= fX && x >= -fX)
-			{
-				return Vector(x, fY);
-			}
+			return Vector(x, fY);
 		}
-		else if (velocity.fY < 0)
-		// Set y = -fY:
+	}
+	else if (velocity.fY < 0)
+	// Set y = -fY:
+	{
+		gamma = (-fY - initial.fY)/velocity.fY;
+		double x = initial.fX + gamma * velocity.fX;
+		if (x <= fX && x >= -fX)
 		{
-			gamma = (-fY - initial.fY)/velocity.fY;
-			double x = initial.fX + gamma * velocity.fX;
-			if (x <= fX && x >= -fX)
-			{
-				return Vector(x, -fY);
-			}	
-		}
+			return Vector(x, -fY);
+		}	
+	}
 
-		// Setting y = fY has gone out of bounds, so now set x = fX:
-		if (velocity.fX > 0)
-		// x = fX:
-		{
-			gamma = (fX - initial.fX)/velocity.fX;
-			double y = initial.fY + gamma * velocity.fY;
-			return Vector(fX, y);
-		}
-		else if (velocity.fX < 0)
-		// x = -fX:
-		{
-			gamma = (-fX - initial.fX)/velocity.fX;
-			double y = initial.fY + gamma * velocity.fY;
-			return Vector(-fX, y);
-		}
+	// Setting y = fY has gone out of bounds, so now set x = fX:
+	if (velocity.fX > 0)
+	// x = fX:
+	{
+		gamma = (fX - initial.fX)/velocity.fX;
+		double y = initial.fY + gamma * velocity.fY;
+		return Vector(fX, y);
+	}
+	else if (velocity.fX < 0)
+	// x = -fX:
+	{
+		gamma = (-fX - initial.fX)/velocity.fX;
+		double y = initial.fY + gamma * velocity.fY;
+		return Vector(-fX, y);
 	}
 
 	return Vector(0,0);

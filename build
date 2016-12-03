@@ -10,13 +10,15 @@ import argparse
 from subprocess import call
 import os
 import glob
+import sys
 
 parser = argparse.ArgumentParser(description='Build automater written by Mike Knee')
 
 parser.add_argument('--flags', '-f', nargs='*', help='Specify non-default compiler flags. The "-" should be omitted.')
 parser.add_argument('--suppress-flags', help='Suppress default compiler switches', action='store_true')
 parser.add_argument('--sources', '-s', nargs='*', help='List of specific sources to compile.')
-parser.add_argument('--cygwin', '-c', help='Compile for windows lol.', action='store_true')
+parser.add_argument('--windows', '-w', help='Compile for windows lol.', action='store_true')
+parser.add_argument('--clean', '-c', help='Clean directory of output files.', action='store_true')
 
 compiler="g++"
 compiler_flags=["-Wall", "-O2", "-std=c++11"]
@@ -29,13 +31,24 @@ executables_to_compile={"test.cpp" : "test",
 			"rectest.cpp" : "rectest",
 			"main.cpp" : "main"}
 
-print
-print "Beginning build."
-print
 
 args = parser.parse_args()
 
+if args.clean:
+    print
+    print "Cleaning workspace of output files."
+    print
+    for file_ in os.listdir('.'):
+        if file_.endswith(".dat"):
+            os.remove(file_)
+    print "Done"
+    print
+    sys.exit(0)  
+
 if args.sources==None:
+    print
+    print "Beginning build."
+    print
     for file_ in os.listdir(source_dir): 
         if file_.endswith(".cpp"):
             # and file_ not in executables_to_compile.keys()
@@ -53,7 +66,7 @@ if args.sources==None:
                 print file_ + " is up to date."
     print
     for source_file in executables_to_compile:
-        if args.cygwin==True:
+        if args.windows:
             exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file]+'.exe', obj_dir+source_file[:-4]+".o"]
         else:
             exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file], obj_dir+source_file[:-4]+".o"]
@@ -77,7 +90,7 @@ if args.sources==None:
 else:
 
     for item in args.sources:
-        if args.cygwin==True:
+        if args.windows:
             exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file]+'.exe', source_dir+source_file]
         else:
             exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file], source_dir+source_file]
@@ -94,6 +107,8 @@ if success:
     print "Done!"
     print "Hooray!"
     print
+    sys.exit(0) 
 else:
     print "FUCK."
     print
+    sys.exit(1)
