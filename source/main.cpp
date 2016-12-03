@@ -562,7 +562,7 @@ void LorentzFractal(int n)
 
 	LorentzTable table = LorentzTable(x, y, r);
 
-	Vector position(r*x - offset, 0);
+	Vector position(x - offset, 0);
 
 	Vector velocity(-1, 0);
 
