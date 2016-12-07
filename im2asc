@@ -6,6 +6,7 @@ import glob, os, argparse
 parser = argparse.ArgumentParser(description='Doot Doot')
 parser.add_argument('filename', nargs=1, help='Image file to process.')
 parser.add_argument('rescale', nargs=1, type=int, help='Rescaling size.')
+parser.add_argument('contrast', nargs='?', type=float, default=1.3, help='Contrast modifier (optional).')
 
 charmap = "@MBHENR#KWXDFPQASUZbdehx*8Gm&04LOVYkpq5Tagns69owz$CIu23Jcfry%1v7l+it[] {}?j|()=~!-/<>\\\"^_';,:`. "
 
@@ -15,7 +16,8 @@ def main():
     im = Image.open(args.filename[0])
     enhancer = ImageEnhance.Contrast(im)
 
-    im = enhancer.enhance(1.3)
+    
+    im = enhancer.enhance(args.contrast)
 
     picsize = im.size
 
