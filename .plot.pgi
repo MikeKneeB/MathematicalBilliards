@@ -18,7 +18,27 @@ if (fname[:4] eq 'frac') {
 	plot fname using 'xVec':'yVec' with points pt 0 title 'x/y'
 	pause -1
 
-} else {
+	exit
+}
+
+if (fname[:3] eq 'box') {
+	set term x11 0
+	set logscale
+	set xlabel "log 1/boxlength"
+	set ylabel "log number of occupied squares"
+	plot fname using 'iboxlen':'count' with lines
+	pause -1
+
+	set term x11 0
+	unset logscale
+	set xlabel "box length"
+	set ylabel "box dimension"
+	#plot fname using 'boxlen':'boxdim' with lines
+	#pause -1
+	
+	exit
+} 
+
 	print 'Plotting x against y (ball path).'
 	set term x11 0
 	set ylabel "y"
