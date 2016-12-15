@@ -7,7 +7,7 @@ import math
 parser = argparse.ArgumentParser('Calculates box dimensions of a fractal image.')
 
 parser.add_argument('datafile', nargs=1, help='Data file.')
-parser.add_argument('maxboxes', nargs=1, type=int, help='Root number of boxes to use.')
+parser.add_argument('maxboxes', nargs=1, type=int, help='10^ number of boxes to use.')
 
 def main():
 	args = parser.parse_args()	
@@ -21,16 +21,18 @@ def main():
 	outfile.write('{0:<10}{1:<17}{2:<17}{3:<10}{4:<10}\n'.format('nboxes', 'boxlen', 'iboxlen', 'count', 'boxdim'))
 
 	for i in range(1, args.maxboxes[0]+1):
-		output = numpy.zeros([i, i])
-		boxlen = 1.0*maxsize*2/i
-		for j in range(i):
-			for k in range(i):
+                reali = i
+                #reali = int(10^i)
+		output = numpy.zeros([reali, reali])
+		boxlen = 1.0*maxsize*2/reali
+		for j in range(reali):
+			for k in range(reali):
 				box = (-maxsize + k*boxlen, -maxsize + j*boxlen)	
 				for point in data:
 					if checkin(box, boxlen, point):
 						output[k][j] += 1 
 		count = countfull(output)
-		outfile.write('{0:<10}{1:<17}{2:<17}{3:<10}\n'.format(i*i, boxlen, 1.0/boxlen, count))
+		outfile.write('{0:<10}{1:<17}{2:<17}{3:<10}\n'.format(reali*reali, boxlen, 1.0/boxlen, count))
 
 	outfile.close()
 
