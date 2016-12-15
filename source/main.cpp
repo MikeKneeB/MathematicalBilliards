@@ -602,12 +602,12 @@ void InnerFrac(ITable & table, Vector & position, Vector & velocity, int n, FILE
 
 	Vector tPosition;
 	
-	fprintf(file, "%-20s%-20s%-20s%-20s%-20s%-20s%-20s\n", "i", "pLength", "angle", "xLength", "yLength", "xVec", "yVec");
+	fprintf(file, "%-24s%-24s%-24s%-24s%-24s%-24s%-24s\n", "i", "pLength", "angle", "xLength", "yLength", "xVec", "yVec");
 	
 	for (int i = 0; i != n; i++)
 	{
 		theta = -M_PI + (2 * M_PI) * (1.0 * i / n);
-		for (int j = 0; j != 50; j++)
+		for (int j = 0; j != 30; j++)
 		{
 			tPosition = table.CollisionPoint(position, velocity);
 			tLength = (position - tPosition).Mod();
@@ -621,7 +621,7 @@ void InnerFrac(ITable & table, Vector & position, Vector & velocity, int n, FILE
 
 			position = table.CollisionPoint(position, velocity);
 			velocity = table.ReflectVector(position, velocity);
-			fprintf(file, "%-20i%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f\n", j, pLength, theta, xLength, yLength, tPosition.fX, tPosition.fY);
+			fprintf(file, "%-24i%-24.15f%-24.15f%-24.15f%-24.15f%-24.15f%-24.15f\n", j, pLength, theta, xLength, yLength, tPosition.fX, tPosition.fY);
 		}
 		position = initial;
 		vInitial = vInitial.Rotate(-M_PI*2/n);
