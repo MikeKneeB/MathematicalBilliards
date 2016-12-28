@@ -5,17 +5,17 @@ if (fname[:4] eq 'frac') {
 	set term x11 0
 	set ylabel "Initial velocity angle"
 	set xlabel "Distance travelled"
-	plot fname using 'pLength':'angle' with points pt 1 title 'mod distance'
+	plot fname using 'pLength':'angle' with points pt 0 title 'mod distance'
 	pause -1
 
 	print "Phase plot x/y distance travelled against velocity angle."
 	set term x11 0
-	plot fname using 'xLength':'angle' with points pt 1 title 'x distance', fname using 'yLength':'angle' with points pt 0 title 'y distance'
+	plot fname using 'xLength':'angle' with points pt 0 title 'x distance', fname using 'yLength':'angle' with points pt 0 title 'y distance'
 	pause -1
 
 	print "Not very useful, but hopefully pretty fractal."
 	set term x11 0
-	plot fname using 'xVec':'yVec' with points pt 1 title 'x/y'
+	plot fname using 'xVec':'yVec' with points pt 0 title 'x/y'
 	pause -1
 
 	exit

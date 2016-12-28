@@ -18,7 +18,8 @@ parser.add_argument('--flags', '-f', nargs='*', help='Specify non-default compil
 parser.add_argument('--suppress-flags', help='Suppress default compiler switches', action='store_true')
 parser.add_argument('--sources', '-s', nargs='*', help='List of specific sources to compile.')
 parser.add_argument('--windows', '-w', help='Compile for windows lol.', action='store_true')
-parser.add_argument('--clean', '-c', help='Clean directory of output files.', action='store_true')
+parser.add_argument('--clean', '-c', help='Clean build directory of output files.', action='store_true')
+parser.add_argument('--clean-output', '-o', help='Clean directory of large text output files.', action='store_true')
 
 compiler="g++"
 compiler_flags=["-Wall", "-O2", "-std=c++11"]
@@ -34,9 +35,9 @@ executables_to_compile={"test.cpp" : "test",
 
 args = parser.parse_args()
 
-if args.clean:
+if args.clean_output:
     print
-    print "Cleaning workspace of output files."
+    print "Cleaning data output files."
     print
     for file_ in os.listdir('.'):
         if file_.endswith(".dat"):
@@ -44,6 +45,16 @@ if args.clean:
     print "Done"
     print
     sys.exit(0)  
+
+elif args.clean:
+    print
+    print "Cleaning build output files."
+    print
+    for file_ in os.listdir(obj_dir):
+        os.remove(obj_dir + file_)
+    print "Done" 
+    print
+    sys.exit(0)
 
 if args.sources==None:
     print
@@ -105,10 +116,9 @@ else:
         
 if success:
     print "Done!"
-    print "Hooray!"
     print
     sys.exit(0) 
 else:
-    print "FUCK."
+    print "Something went wrong."
     print
     sys.exit(1)

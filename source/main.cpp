@@ -21,6 +21,24 @@
  */
 void RunStadium(int n);
 
+/**
+ * StadiumFractal creates a stadium table as above in RunStadium, but then
+ * initialises the ball position close to the right hand wall (by an amount
+ * specified by the user). The velocity is initialised with modulus 1 and 
+ * argument -pi radians, and the ball is allowed to bounce 30 times.
+ *
+ * This process is repeated, but the initial velocity argument is varied at
+ * each repetition, going between -pi and pi. The total distance travelled after each bounce is output
+ * to the file, along with the initial velocity argument.
+ *
+ * This should hopefully produce interesting 'mirror room' graphs which may be
+ * fractal in nature. Output data to 'fracstadout.dat'.
+ *
+ * This method calls the InnerFrac method.
+ *
+ * int n: repetitions of the simulation (I.e. number of different
+ * initial velocity arguments between -pi and pi) 
+ */
 void StadiumFractal(int n);
 
 /**
@@ -31,6 +49,12 @@ void StadiumFractal(int n);
  */
 void RunEllipse(int n);
 
+/**
+ * See StadiumFractal for details, uses elliptical table instead of stadium
+ * table. Output to 'fracelipout.dat'.
+ *
+ * int n: repetitions of the simulation to run.
+ */
 void EllipticalFractal(int n);
 
 /**
@@ -40,6 +64,12 @@ void EllipticalFractal(int n);
  */
 void RunCircle(int n);
 
+/**
+ * Similar to StadiumFractal, using the circular table type. Output to
+ * 'fraccircout.dat'.
+ *
+ * int n: repetitions of the simulation to run.
+ */
 void CircularFractal(int n);
 
 /**
@@ -49,10 +79,27 @@ void CircularFractal(int n);
  */
 void RunRectangle(int n);
 
+/**
+ * Fractal process for rectangular table. Output to 'fracrectout.dat'.
+ *
+ * int n: repetitions of the simulation to run.
+ */
 void RectangularFractal(int n);
 
+/**
+ * Runs the lorentz table simulation. Random args not available. Data output to
+ * 'loreout.dat'.
+ *
+ * int n: iterations of the simulation to run.
+ */
 void RunLorentz(int n);
 
+
+/**
+ * Fractal lorentz table. Output to 'fracloreout.dat'.
+ *
+ * int n: repetitions of the simulation to run.
+ */
 void LorentzFractal(int n);
 
 /**
@@ -72,6 +119,22 @@ void LorentzFractal(int n);
  */
 void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE * file);
 
+/**
+ * InnerFrac is called iternally by each of the Fractal functions. It takes in
+ * an ITable type, and performs the fractal result generation n times.
+ *
+ * The output file is specified as an argument, along with initial position and
+ * velocity.
+ *
+ * PRE: velocity has argument -pi.
+ *
+ * ITable & table: billiard table for the simulation.
+ * Vector & position: initial position for the billiard ball.
+ * Vector & velocity: initial velocity for the billiard ball.
+ * int n: number of repetitions of the simulation (I.e. number of different
+ * initial velocity angles.)
+ * FILE * file: file stream to write to.
+ */
 void InnerFrac(ITable & table, Vector & position, Vector & velocity, int n, FILE * file);
 
 /**
@@ -116,6 +179,7 @@ int main()
 
 	while (true)
 	{
+		//Print menu choices
 		printf("\n(1) Stadium Table\n");
 		printf("(2) Elliptical Table\n");
 		printf("(3) Circular Table\n");
@@ -127,6 +191,7 @@ int main()
 		printf("Please enter a choice: ");
 		int choice, secondChoice;
 
+		//Get menu choice.
 		while (!(std::cin >> choice) || choice < 0 || choice > 6)
 		{
 			printf("Enter a valid choice: ");
@@ -134,10 +199,13 @@ int main()
 			std::cin.ignore();
 		}
 		
+		//Exit if choice 0
 		if (choice == 0) break;
 		
+		//Initialise variable for number of iterations.
 		int n = 0;
 
+		//Don't display simulation options for the help function.
 		if (choice != 6)
 		{		
 			printf("Please enter 0 for regular plots, 1 for fractal plots: ");
@@ -152,6 +220,7 @@ int main()
 			std::cin >> n;
 		}
 
+		//Run specified option.
 		switch (choice)
 		{
 			case 1:
@@ -193,20 +262,24 @@ int main()
 
 void RunStadium(int n)
 {
+	//Get stadium dimensions. See StadiumTable class for details of how
+	//this table is parameterised. 
 	double y, x;
 	printf("Please enter y size: ");
 	std::cin >> y;
 	printf("Please enter x size: ");
 	std::cin >> x;
 
+	//Create table.
 	StadiumTable table = StadiumTable(x, y);
 
 	Vector initial, velocity;
 
 	bool choice;
 
-	printf("Enter 1 for random args, and 0 for user-input args: ");
+	printf("Enter 1 for random initial coniditions, and 0 for user-input: ");
 
+	//Choose random of specified arguments.
 	while (!(std::cin >> choice))
 	{
 		std::cin.clear();
@@ -216,11 +289,15 @@ void RunStadium(int n)
 
 	if (choice)
 	{
+		//Table parameters stored in array to be passed to the random
+		//initial condition generator.
 		double params[2] = {x, y};
+		//Randomly generate based on table parameters.
 		RandomArgs(initial, velocity, 4, params);
 	}
 	else
 	{
+		//Otherwise ask for user arguments.
 		GetArgs(initial, velocity);
 	}
 
@@ -230,6 +307,7 @@ void RunStadium(int n)
 
 	printf("\nWriting to 'stadout.dat'...\n");
 
+	//Call internal run function.
 	InnerRun(table, initial, velocity, n, file);
 
 	fclose(file);
@@ -241,26 +319,36 @@ void RunStadium(int n)
 
 void StadiumFractal(int n)
 {
+	//Get table dimensions as before.
 	double y, x;
 	printf("Please enter y size: ");
 	std::cin >> y;
 	printf("Please enter x size: ");
 	std::cin >> x;
 
+	//Get offset.
 	double offset;
 	printf("Please enter offset from table edge (rec ~ 0.00001): ");
 	std::cin >> offset;
 
+	//Create table.
 	StadiumTable table = StadiumTable(x, y);
 
+	//Initialise position using table parameters and offset.
+	//Initial position is next to right hand wall, offset a small amount.
+	//The offset is needed, as if the ball is initially directly against the
+	//wall the simulation fails.
 	Vector position(x + y - offset, 0);
 
+	//Initial velocity is directly away from the wall. I.e. mod 1, argument
+	//-pi.
 	Vector velocity(-1, 0);
 
 	FILE * file;
 	file = fopen("fracstadout.dat", "w");
 	printf("Writing to file fracstadout.dat...\n");
 
+	//Call inner fractal method.
 	InnerFrac(table, position, velocity, n, file);
 
 	printf("Done!\n");
@@ -269,6 +357,7 @@ void StadiumFractal(int n)
 
 void RunEllipse(int n)
 {
+	//Table dimensions.
 	double y, x, r;
 	printf("Please enter y coefficient: ");
 	std::cin >> y;
@@ -283,7 +372,7 @@ void RunEllipse(int n)
 
 	bool choice;
 
-	printf("Enter 1 for random args, and 0 for user-input args: ");
+	printf("Enter 1 for random initial conditions, and 0 for user-input: ");
 
 	while (!(std::cin >> choice))
 	{
@@ -292,6 +381,7 @@ void RunEllipse(int n)
 		printf("Please enter a valid choice: ");
 	}
 
+	//Generate random conditions or ask for user input.
 	if (choice)
 	{
 		double params[3] = {r, x, y};
@@ -308,6 +398,7 @@ void RunEllipse(int n)
 
 	printf("\nWriting to 'elipout.dat'...\n");
 
+	//Call inner method.
 	InnerRun(table, initial, velocity, n, file);
 
 	fclose(file);
@@ -319,6 +410,7 @@ void RunEllipse(int n)
 
 void EllipticalFractal(int n)
 {
+	//Get dimensions.
 	double y, x, r;
 	printf("Please enter y coefficient: ");
 	std::cin >> y;
@@ -333,14 +425,17 @@ void EllipticalFractal(int n)
 
 	EllipseTable table = EllipseTable(r, x, y);
 
+	//As before, initialise position as offset away from right hand edge. 
 	Vector position(r*x - offset, 0);
 
+	//Initial velocity.
 	Vector velocity(-1, 0);
 
 	FILE * file;
 	file = fopen("fracelipout.dat", "w");
 	printf("Writing to file fracelipout.dat...\n");
 
+	//Call inner method.
 	InnerFrac(table, position, velocity, n, file);
 
 	printf("Done!\n");
@@ -349,6 +444,7 @@ void EllipticalFractal(int n)
 
 void RunCircle(int n)
 {
+	//Get dimensions.
 	double r;
 	printf("Please enter radius: ");
 	std::cin >> r;
@@ -359,7 +455,7 @@ void RunCircle(int n)
 
 	bool choice;
 
-	printf("Enter 1 for random args, and 0 for user-input args: ");
+	printf("Enter 1 for random initial conditions, and 0 for user-input: ");
 
 	while (!(std::cin >> choice))
 	{
@@ -368,6 +464,7 @@ void RunCircle(int n)
 		printf("Please enter a valid choice: ");
 	}
 
+	//Generate args or ask for user args.
 	if (choice)
 	{
 		double params[1] = {r};
@@ -384,6 +481,7 @@ void RunCircle(int n)
 
 	printf("\nWriting to 'circout.dat'...\n");
 
+	//Call inner method.
 	InnerRun(table, initial, velocity, n, file);
 	
 	fclose(file);
@@ -395,6 +493,7 @@ void RunCircle(int n)
 
 void CircularFractal(int n)
 {
+	//As in previous fractal functions:
 	double r;
 	printf("Please enter radius: ");
 	std::cin >> r;
@@ -421,6 +520,7 @@ void CircularFractal(int n)
 
 void RunRectangle(int n)
 {
+	//As in previous run functions:
 	double y, x;
 	printf("Please enter y size: ");
 	std::cin >> y;
@@ -433,7 +533,7 @@ void RunRectangle(int n)
 
 	bool choice;
 
-	printf("Enter 1 for random args, or 0 for user-input args: ");
+	printf("Enter 1 for random initial conditions, or 0 for user-input: ");
 
 	while (!(std::cin >> choice))
 	{
@@ -470,6 +570,7 @@ void RunRectangle(int n)
 
 void RectangularFractal(int n)
 {
+	//As in previous fractal functions:
 	double y, x;
 	printf("Please enter y size: ");
 	std::cin >> y;
@@ -498,6 +599,7 @@ void RectangularFractal(int n)
 
 void RunLorentz(int n)
 {
+	//As in previous run functions:
 	double y, x, r;
 	printf("Please enter y size: ");
 	std::cin >> y;
@@ -510,26 +612,7 @@ void RunLorentz(int n)
 
 	Vector initial, velocity;
 
-//	bool choice;
-
-//	printf("Enter 1 for random args, and 0 for user-input args: ");
-
-//	while (!(std::cin >> choice))
-//	{
-//		std::cin.clear();
-//		std::cin.ignore();
-//		printf("Please enter a valid choice: ");
-//	}
-
-//	if (choice)
-//	{
-//		double params[3] = {r, x, y};
-//		RandomArgs(initial, velocity, 2, params);
-//	}
-//	else
-//	{
-		GetArgs(initial, velocity);
-//	}
+	GetArgs(initial, velocity);
 
 	FILE * file;
 
@@ -548,6 +631,7 @@ void RunLorentz(int n)
 
 void LorentzFractal(int n)
 {
+	//As in previous fractal functions:
 	double y, x, r;
 	printf("Please enter y size: ");
 	std::cin >> y;
@@ -578,54 +662,85 @@ void LorentzFractal(int n)
 
 void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE * file)
 {
+	//Get initial angle.
 	double angle = velocity.Arg();
 
+	//Print headers to file.
 	fprintf(file, "%-10s%-20s%-20s%-20s%-20s%-20s%-20s%-20s%-20s%-20s\n", "i", "x", "y", "mp", "pa", "a", "vx", "vy", "mv", "va");
 
+	//For specified number of iterations:
 	for (int i = 0; i != n; i++)
 	{
+		//Print current status.
 		fprintf(file, "%-10i%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f\n", 
 			i, position.fX, position.fY, position.Mod(), std::fmod(position.Arg(), 2*M_PI),
 			angle, velocity.fX, velocity.fY, velocity.Mod(), std::fmod(velocity.Arg(), 2*M_PI));
+		//Find next position.
 		position = table.CollisionPoint(position, velocity);
+		//Find angle between table wall and ball trajectory.
 		angle = std::fmod(table.AngleIncidence(position, velocity), 2*M_PI);
+		//Find velocity after collision.
 		velocity = table.ReflectVector(position, velocity);
 	}
 }
 
 void InnerFrac(ITable & table, Vector & position, Vector & velocity, int n, FILE * file)
 {
+	//Initialise varibales and temporary variables.
 	double tLength, pLength = 0, xLength = 0, yLength = 0, theta;
+	//pLength, xLength and yLength are the important data to output,
+	//tLength and theta are temporary useful variables.
 
+	//Store initial conditions, as they must be returned to after each run.
 	Vector initial = position;
 	Vector vInitial = velocity;
 
+	//Temporary position vector.
 	Vector tPosition;
 	
+	//Write header to file.
 	fprintf(file, "%-24s%-24s%-24s%-24s%-24s%-24s%-24s\n", "i", "pLength", "angle", "xLength", "yLength", "xVec", "yVec");
 	
 	for (int i = 0; i != n; i++)
 	{
+		//One run of the simulation:
+		//Initial angle for velocity.
 		theta = -M_PI + (2 * M_PI) * (1.0 * i / n);
 		for (int j = 0; j != 30; j++)
 		{
+			//Compute next poisition.
 			tPosition = table.CollisionPoint(position, velocity);
+			//Path length from current to next position.
 			tLength = (position - tPosition).Mod();
+			//Add to total path.
 			pLength += tLength;
 
-			tPosition = Vector(pLength, 0);
-			tPosition = tPosition.Rotate(theta);
-
+			//Update x and yLengths in similar ways.
 			xLength += std::abs(position.fX - tPosition.fX);
 			yLength += std::abs(position.fY - tPosition.fY);
-
-			position = table.CollisionPoint(position, velocity);
+			
+			//Update position and velocity.
+			position = tPosition;
 			velocity = table.ReflectVector(position, velocity);
+			
+			//Now using tPosition for mirror-room plot.
+			//tPosition is total path length with same argument as 
+			//initial velocity.
+			//This can be used to produce (hopefully) fractal
+			//images.
+			tPosition = Vector(pLength, 0);
+			tPosition = tPosition.Rotate(theta);
+			
+			//Print data to output file.
 			fprintf(file, "%-24i%-24.15f%-24.15f%-24.15f%-24.15f%-24.15f%-24.15f\n", j, pLength, theta, xLength, yLength, tPosition.fX, tPosition.fY);
 		}
+		//Reset position.
 		position = initial;
+		//vInitial is now rotated around.
 		vInitial = vInitial.Rotate(-M_PI*2/n);
+		//Reset velocity.
 		velocity = vInitial;
+		//Reset lengths.
 		pLength = 0;
 		xLength = 0;
 		yLength = 0;
@@ -634,8 +749,10 @@ void InnerFrac(ITable & table, Vector & position, Vector & velocity, int n, FILE
 
 void GetArgs(Vector & initial, Vector & velocity)
 {
+	//Doubles to store input.
 	double iX, iY, vX, vY;
 
+	//Get input:
 	printf("Please enter initial x: ");
 	std::cin >> iX;
 	printf("Initial y: ");
@@ -645,6 +762,7 @@ void GetArgs(Vector & initial, Vector & velocity)
 	printf("Initial y velocity: ");
 	std::cin >> vY;
 
+	//Store input in vectors.
 	initial = Vector(iX, iY);
 	velocity = Vector(vX, vY);
 
@@ -653,59 +771,86 @@ void GetArgs(Vector & initial, Vector & velocity)
 
 void RandomArgs(Vector & initial, Vector & velocity, int type, double params[])
 {
+	//Initialise the random engine.
 	std::default_random_engine engine;
 	engine.seed(std::time(0));
 
+	//Temporary doubles to store output.
 	double temp, iX, iY;
 	
+	//Type 1 = circle
 	if (type == 1)
 	{
+		//X coord lies between -radius and radius:
 		std::uniform_real_distribution<double> rangeX(-params[0], params[0]);
+		//Get random x.
 		iX = rangeX(engine);
 
+		//Now y coord is constrained by value of x, so calculate
+		//possible y range.
 		temp = std::sqrt(params[0] * params[0] - iX * iX);
 
+		//Get random y as before.
 		std::uniform_real_distribution<double> rangeY(-temp, temp);
 		iY = rangeY(engine);
 	}
+	//Type 2 = ellipse
 	else if (type == 2)
 	{
+		//Possible x range is calculated using y = 0.
 		temp = params[0] * params[1];
 		std::uniform_real_distribution<double> rangeX(-temp, temp);
+		//Get random x.
 		iX = rangeX(engine);
 
+		//Y range is now constrained by x, so using x = iX calculate
+		//possible y range.
 		temp = params[2] * std::sqrt(params[0] * params[0] - (iX * iX)/(params[1] * params[1]));
 
+		//Get y.
 		std::uniform_real_distribution<double> rangeY(-temp, temp);
 		iY = rangeY(engine);
 
 	}
+	//Type 3 = rectangle
 	else if (type == 3)
 	{
+		//Ranges specified by x and y lengths of rectangle.
 		std::uniform_real_distribution<double> rangeX(-params[0], params[0]);
 		std::uniform_real_distribution<double> rangeY(-params[1], params[1]);
+		//Get random values.
 		iX = rangeX(engine);
 		iY = rangeY(engine);
 
 	}
+	//Type 4 = stadium
 	else if (type == 4)
 	{
+		//X range is constrained by x length of table + radius of
+		//semicircles (i.e. x + y)
 		std::uniform_real_distribution<double> rangeX(-params[0] - params[1], params[0] + params[1]);
 
+		//Generate random x.
 		iX = rangeX(engine);
 
+		//If iX is within right side semicircle.
 		if (iX > params[0])
 		{
+			//Generate y as for a circle.
 			temp = iX - params[0];
 
+			//Calculate y range.
 			temp = std::sqrt(params[1] * params[1] - temp * temp);
 
 			std::uniform_real_distribution<double> rangeY(-temp, temp);
+			//Generate y.
 			iY = rangeY(engine);
 
 		}
+		//If iX is within left side semicircle.
 		else if (iX < -params[0])
 		{
+			//Generate as for circle.
 			temp = iX + params[0];
 
 			temp = std::sqrt(params[1] * params[1] - temp * temp);
@@ -714,12 +859,16 @@ void RandomArgs(Vector & initial, Vector & velocity, int type, double params[])
 			iY = rangeY(engine);
 
 		}
+		//iX is within the rectangular section.
 		else
 		{
+			//Generate as for rectangle.
 			std::uniform_real_distribution<double> rangeY(-params[1], params[1]);
 			iY = rangeY(engine);
 		}
 	}
+	//Type is not recognised. This will never be encountered, as this
+	//function is only used internally.
 	else
 	{
 		printf("NO\n");
@@ -727,12 +876,15 @@ void RandomArgs(Vector & initial, Vector & velocity, int type, double params[])
 		iX = 0;
 	}
 
+	//Put generated position values in initial vector.
 	initial.fX = iX;
 	initial.fY = iY;
 	
+	//Velocity is randomised, but less constraint required.
 	velocity = Vector(0.0, 0.0);
 	std::uniform_real_distribution<double> rangeV(-1,1);
 
+	//Want at least one velocity component to be non-zero.
 	while (velocity.fX == 0.0 && velocity.fY == 0.0)
 	{
 		velocity.fX = rangeV(engine);
@@ -744,6 +896,7 @@ void RandomArgs(Vector & initial, Vector & velocity, int type, double params[])
 
 void Help()
 {
+	//Print basic help message.
 	printf("\nThis program simulates billiard balls bouncing off the walls of a billiards"); 
 	printf("\ntable. The four options correspond to the different types of table available.");
 	printf("\nEach table has a seperate geometry which you will be asked to specify, although");
@@ -757,6 +910,7 @@ void Help()
 	printf("\nEnter a menu choice (0 - 6) to see details or to exit help: ");
 	while (true)
 	{
+		//Get choice for help menu.
 		int choice;
 		while (!(std::cin >> choice) || choice < 0 || choice > 6)
 		{
@@ -765,8 +919,10 @@ void Help()
 			std::cin.ignore();
 		}
 	
+		//Exit on 0.
 		if (choice == 0) break;
 
+		//Display specific help.
 		switch (choice)
 		{
 			case 1:
