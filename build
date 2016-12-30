@@ -40,7 +40,7 @@ if args.clean_output:
     print "Cleaning data output files."
     print
     for file_ in os.listdir('.'):
-        if file_.endswith(".dat"):
+        if file_.endswith(".dat") or file_.endswith(".pdf"):
             os.remove(file_)
     print "Done"
     print

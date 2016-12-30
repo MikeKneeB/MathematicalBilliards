@@ -673,8 +673,8 @@ void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE 
 	{
 		//Print current status.
 		fprintf(file, "%-10i%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f%-20.15f\n", 
-			i, position.fX, position.fY, position.Mod(), position.Arg(),
-			angle, velocity.fX, velocity.fY, velocity.Mod(), velocity.Arg());
+			i, position.fX, position.fY, position.Mod(), std::fmod(position.Arg(), 2*M_PI),
+			angle, velocity.fX, velocity.fY, velocity.Mod(), std::fmod(velocity.Arg(), 2*M_PI));
 		//Find next position.
 		position = table.CollisionPoint(position, velocity);
 		//Find angle between table wall and ball trajectory.
