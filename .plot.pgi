@@ -1,7 +1,6 @@
 set grid
 
 set term pdf
-set size square
 
 if (fname[:4] eq 'frac') {
 	print "Phase plot distance travelled against initial velocity angle."
@@ -17,6 +16,27 @@ if (fname[:4] eq 'frac') {
 	print "Not very useful, but hopefully pretty fractal."
 	set output 'radialDistanceAngle.pdf'
 	plot fname using 'xVec':'yVec' with points pt 0 title 'x/y'
+
+	exit
+}
+
+if (fname[:4] eq 'chao') {
+	set output 'chaoticAnalysisLog.pdf'
+	set logscale
+	set xlabel "log iterations"
+	set ylabel "log position difference (epsilon)"
+	plot fname using 'i':'dpa' with lines title 'position difference'
+
+	set output 'chaoticAnalysis.pdf'
+	unset logscale
+	set xlabel "iterations"
+	set ylabel "position difference (epsilon)"
+	plot fname using 'i':'dpa' title 'position difference' 
+
+	set output 'chaoticPaths.pdf'
+	set xlabel 'x'
+	set ylabel 'y'
+	plot fname using '1x':'1y' with lines title '1', fname using '2x':'2y' with lines title '2' 
 
 	exit
 }
@@ -37,6 +57,7 @@ if (fname[:3] eq 'box') {
 	exit
 } 
 
+	set size ratio -1 
 	print 'Plotting x against y (ball path).'
 	set output 'path.pdf'
 	set ylabel "y"

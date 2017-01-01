@@ -41,6 +41,8 @@ void RunStadium(int n);
  */
 void StadiumFractal(int n);
 
+void StadiumChaos(int n);
+
 /**
  * RunEllipse similarly creates an elliptical table and initialises the
  * simulation, which is run n times with data output to 'elipout'.
@@ -57,6 +59,8 @@ void RunEllipse(int n);
  */
 void EllipticalFractal(int n);
 
+void EllipticalChaos(int n);
+
 /**
  * As above, circular table and data output to 'circout'.
  *
@@ -72,6 +76,8 @@ void RunCircle(int n);
  */
 void CircularFractal(int n);
 
+void CircularChaos(int n);
+
 /**
  * As above, rectangular table and data output to 'rectout'.
  *
@@ -85,6 +91,8 @@ void RunRectangle(int n);
  * int n: repetitions of the simulation to run.
  */
 void RectangularFractal(int n);
+
+void RectangularChaos(int n);
 
 /**
  * Runs the lorentz table simulation. Random args not available. Data output to
@@ -101,6 +109,8 @@ void RunLorentz(int n);
  * int n: repetitions of the simulation to run.
  */
 void LorentzFractal(int n);
+
+void LorentzChaos(int n);
 
 /**
  * InnerRun is called iternally by each of the Run functions, and performs the
@@ -136,6 +146,8 @@ void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE 
  * FILE * file: file stream to write to.
  */
 void InnerFrac(ITable & table, Vector & position, Vector & velocity, int n, FILE * file);
+
+void InnerChaos(ITable & table, Vector & position1, Vector & position2, Vector & velocity1, Vector & velocity2, int n, FILE * file);
 
 /**
  * Initialises vector position and velocity of the billiard ball, by asking
@@ -208,8 +220,8 @@ int main()
 		//Don't display simulation options for the help function.
 		if (choice != 6)
 		{		
-			printf("Please enter 0 for regular plots, 1 for fractal plots: ");
-			while (!(std::cin >> secondChoice) || secondChoice < 0 || secondChoice > 1)
+			printf("Please enter 0 for regular plots, 1 for fractal plots or 2 for chaotic behaviour analysis: ");
+			while (!(std::cin >> secondChoice) || secondChoice < 0 || secondChoice > 2)
 			{
 				printf("Enter a valid choice: ");
 				std::cin.clear();
@@ -226,32 +238,42 @@ int main()
 			case 1:
 				if (secondChoice == 0)
 					RunStadium(n);
-				else
+				else if (secondChoice == 1)
 					StadiumFractal(n);
+				else
+					StadiumChaos(n);
 				break;
 			case 2:
 				if (secondChoice == 0)
 					RunEllipse(n);
-				else
+				else if (secondChoice == 1)
 					EllipticalFractal(n);
+				else
+					EllipticalChaos(n);
 				break;
 			case 3:
 				if (secondChoice == 0)
 					RunCircle(n);
-				else
+				else if (secondChoice == 1)
 					CircularFractal(n);
+				else
+					CircularChaos(n);
 				break;
 			case 4:
 				if (secondChoice == 0)
 					RunRectangle(n);
-				else
+				else if (secondChoice == 1)
 					RectangularFractal(n);
+				else
+					RectangularChaos(n);
 				break;
 			case 5:
 				if (secondChoice == 0)
 					RunLorentz(n);
-				else
+				else if (secondChoice == 1)
 					LorentzFractal(n);
+				else
+					LorentzChaos(n);
 				break;
 			case 6:
 				Help();
@@ -309,6 +331,44 @@ void RunStadium(int n)
 
 	//Call internal run function.
 	InnerRun(table, initial, velocity, n, file);
+
+	fclose(file);
+
+	printf("Done!\n");
+
+	return;
+}
+
+void StadiumChaos(int n)
+{
+	//Get stadium dimensions. See StadiumTable class for details of how
+	//this table is parameterised. 
+	double y, x;
+	printf("Please enter y size: ");
+	std::cin >> y;
+	printf("Please enter x size: ");
+	std::cin >> x;
+
+	//Create table.
+	StadiumTable table = StadiumTable(x, y);
+
+	Vector initial1, velocity1, initial2, velocity2;
+
+	//No random option.
+	GetArgs(initial1, velocity1);
+
+	printf("Please now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	//Need two sets of initial conditions for this analysis.
+	GetArgs(initial2, velocity2);
+
+	FILE * file;
+
+	file = fopen("chaostadout.dat", "w");
+
+	printf("\nWriting to 'chaostadout.dat'...\n");
+
+	//Call internal chaos function.
+	InnerChaos(table, initial1, initial2, velocity1, velocity2, n, file);
 
 	fclose(file);
 
@@ -408,6 +468,48 @@ void RunEllipse(int n)
 	return;
 }
 
+void EllipticalChaos(int n)
+{
+	//Get stadium dimensions. See StadiumTable class for details of how
+	//this table is parameterised. 
+	double y, x, r;
+	printf("Please enter y coefficient: ");
+	std::cin >> y;
+	printf("Please enter x coefficient: ");
+	std::cin >> x;
+	printf("Please enter radius: ");
+	std::cin >> r;
+
+	//Create table.
+	EllipseTable table = EllipseTable(x, y, r);
+
+	Vector initial1, velocity1, initial2, velocity2;
+
+	//No random option.
+	GetArgs(initial1, velocity1);
+
+	printf("Please now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+
+	//Need two sets of initial conditions for this analysis.
+	GetArgs(initial2, velocity2);
+
+	FILE * file;
+
+	file = fopen("chaoelipout.dat", "w");
+
+	printf("\nWriting to 'chaoelipout.dat'...\n");
+
+	//Call internal chaos function.
+	InnerChaos(table, initial1, initial2, velocity1, velocity2, n, file);
+
+	fclose(file);
+
+	printf("Done!\n");
+
+	return;
+}
+
+
 void EllipticalFractal(int n)
 {
 	//Get dimensions.
@@ -491,6 +593,42 @@ void RunCircle(int n)
 	return;
 }
 
+void CircularChaos(int n)
+{
+	//Get dimensions.
+	double r;
+	printf("Please enter radius: ");
+	std::cin >> r;
+
+	//Create table.
+	CircleTable table = CircleTable(r);
+
+	Vector initial1, velocity1, initial2, velocity2;
+
+	//No random option.
+	GetArgs(initial1, velocity1);
+
+	printf("Please now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	//Need two sets of initial conditions for this analysis.
+	GetArgs(initial2, velocity2);
+
+	FILE * file;
+
+	file = fopen("chaocircout.dat", "w");
+
+	printf("\nWriting to 'chaocircout.dat'...\n");
+
+	//Call internal chaos function.
+	InnerChaos(table, initial1, initial2, velocity1, velocity2, n, file);
+
+	fclose(file);
+
+	printf("Done!\n");
+
+	return;
+}
+
+
 void CircularFractal(int n)
 {
 	//As in previous fractal functions:
@@ -568,6 +706,44 @@ void RunRectangle(int n)
 	return;
 }
 
+void RectangularChaos(int n)
+{
+	//Get dimensions.
+	double x, y;
+	printf("Please enter y size: ");
+	std::cin >> y;
+	printf("Please enter x size: ");
+	std::cin >> x;
+
+	//Create table.
+	RectangleTable table = RectangleTable(x, y);
+
+	Vector initial1, velocity1, initial2, velocity2;
+
+	//No random option.
+	GetArgs(initial1, velocity1);
+
+	printf("Please now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	//Need two sets of initial conditions for this analysis.
+	GetArgs(initial2, velocity2);
+
+	FILE * file;
+
+	file = fopen("chaorectout.dat", "w");
+
+	printf("\nWriting to 'chaorectout.dat'...\n");
+
+	//Call internal chaos function.
+	InnerChaos(table, initial1, initial2, velocity1, velocity2, n, file);
+
+	fclose(file);
+
+	printf("Done!\n");
+
+	return;
+}
+
+
 void RectangularFractal(int n)
 {
 	//As in previous fractal functions:
@@ -628,6 +804,45 @@ void RunLorentz(int n)
 
 	return;
 }
+
+void LorentzChaos(int n)
+{
+	//Get dimensions.
+	double x, y, r;
+	printf("Please enter y size: ");
+	std::cin >> y;
+	printf("Please enter x size: ");
+	std::cin >> x;
+	printf("Please enter radius of inner circle: ");
+	std::cin >> r;
+
+	//Create table.
+	LorentzTable table = LorentzTable(x, y, r);
+
+	Vector initial1, velocity1, initial2, velocity2;
+
+	//No random option.
+	GetArgs(initial1, velocity1);
+	printf("Please now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	//Need two sets of initial conditions for this analysis.
+	GetArgs(initial2, velocity2);
+
+	FILE * file;
+
+	file = fopen("chaoloreout.dat", "w");
+
+	printf("\nWriting to 'chaoloreout.dat'...\n");
+
+	//Call internal chaos function.
+	InnerChaos(table, initial1, initial2, velocity1, velocity2, n, file);
+
+	fclose(file);
+
+	printf("Done!\n");
+
+	return;
+}
+
 
 void LorentzFractal(int n)
 {
@@ -744,6 +959,25 @@ void InnerFrac(ITable & table, Vector & position, Vector & velocity, int n, FILE
 		pLength = 0;
 		xLength = 0;
 		yLength = 0;
+	}
+}
+
+void InnerChaos(ITable & table, Vector & position1, Vector & position2, Vector & velocity1, Vector & velocity2, int n, FILE * file)
+{
+	fprintf(file, "%-24s%-24s%-24s%-24s%-24s%-24s%-24s%-24s\n", "i", "1x", "1y", "1pa", "2x", "2y", "2pa", "dpa");
+
+	for (int i = 0; i != n; i++)
+	{
+		//Print current status.
+		fprintf(file, "%-24i%-24.15f%-24.15f%-24.15f%-24.15f%-24.15f%-24.15f%-24.15f\n", 
+			i, position1.fX, position1.fY, position1.Arg(),
+			position2.fX, position2.fY, position2.Arg(), std::abs(position1.Arg() - position2.Arg()));
+		//Find next position.
+		position1 = table.CollisionPoint(position1, velocity1);
+		position2 = table.CollisionPoint(position2, velocity2);
+		//Find velocity after collision.
+		velocity1 = table.ReflectVector(position1, velocity1);
+		velocity2 = table.ReflectVector(position2, velocity2);
 	}
 }
 
