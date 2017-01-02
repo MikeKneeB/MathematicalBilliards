@@ -357,7 +357,7 @@ void StadiumChaos(int n)
 	//No random option.
 	GetArgs(initial1, velocity1);
 
-	printf("Please now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	printf("\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
 	//Need two sets of initial conditions for this analysis.
 	GetArgs(initial2, velocity2);
 
@@ -481,14 +481,14 @@ void EllipticalChaos(int n)
 	std::cin >> r;
 
 	//Create table.
-	EllipseTable table = EllipseTable(x, y, r);
+	EllipseTable table = EllipseTable(r, x, y);
 
 	Vector initial1, velocity1, initial2, velocity2;
 
 	//No random option.
 	GetArgs(initial1, velocity1);
 
-	printf("Please now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	printf("\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
 
 	//Need two sets of initial conditions for this analysis.
 	GetArgs(initial2, velocity2);
@@ -608,7 +608,7 @@ void CircularChaos(int n)
 	//No random option.
 	GetArgs(initial1, velocity1);
 
-	printf("Please now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	printf("\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
 	//Need two sets of initial conditions for this analysis.
 	GetArgs(initial2, velocity2);
 
@@ -723,7 +723,7 @@ void RectangularChaos(int n)
 	//No random option.
 	GetArgs(initial1, velocity1);
 
-	printf("Please now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	printf("\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
 	//Need two sets of initial conditions for this analysis.
 	GetArgs(initial2, velocity2);
 
@@ -823,7 +823,7 @@ void LorentzChaos(int n)
 
 	//No random option.
 	GetArgs(initial1, velocity1);
-	printf("Please now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	printf("\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
 	//Need two sets of initial conditions for this analysis.
 	GetArgs(initial2, velocity2);
 

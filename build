@@ -14,12 +14,12 @@ import sys
 
 parser = argparse.ArgumentParser(description='Build automater written by Mike Knee')
 
-parser.add_argument('--flags', '-f', nargs='*', help='Specify non-default compiler flags. The "-" should be omitted.')
+parser.add_argument('--flags', '-f', nargs='*', help='Specify non-default compiler flags. The "-" should be omitted e.g. "-f O2 Wall" ') 
 parser.add_argument('--suppress-flags', help='Suppress default compiler switches', action='store_true')
 parser.add_argument('--sources', '-s', nargs='*', help='List of specific sources to compile.')
-parser.add_argument('--windows', '-w', help='Compile for windows lol.', action='store_true')
+parser.add_argument('--windows', '-w', help='Compile for cygwin.', action='store_true')
 parser.add_argument('--clean', '-c', help='Clean build directory of output files.', action='store_true')
-parser.add_argument('--clean-output', '-o', help='Clean directory of large text output files.', action='store_true')
+parser.add_argument('--clean-output', '-o', help='Clean directory of program output files.', action='store_true')
 
 compiler="g++"
 compiler_flags=["-Wall", "-O2", "-std=c++11"]

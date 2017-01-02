@@ -1,6 +1,6 @@
 set grid
 
-set term pdf
+set term pdf size 5,5
 
 if (fname[:4] eq 'frac') {
 	print "Phase plot distance travelled against initial velocity angle."
@@ -22,8 +22,8 @@ if (fname[:4] eq 'frac') {
 
 if (fname[:4] eq 'chao') {
 	set output 'chaoticAnalysisLog.pdf'
-	set logscale
-	set xlabel "log iterations"
+	set logscale y
+	set xlabel "iterations"
 	set ylabel "log position difference (epsilon)"
 	plot fname using 'i':'dpa' with lines title 'position difference'
 
@@ -34,6 +34,7 @@ if (fname[:4] eq 'chao') {
 	plot fname using 'i':'dpa' title 'position difference' 
 
 	set output 'chaoticPaths.pdf'
+	set size ratio -1
 	set xlabel 'x'
 	set ylabel 'y'
 	plot fname using '1x':'1y' with lines title '1', fname using '2x':'2y' with lines title '2' 
