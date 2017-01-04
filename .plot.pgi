@@ -1,6 +1,6 @@
 set grid
 
-set term pdf size 5,5
+set term pdf 
 
 if (fname[:4] eq 'frac') {
 	print "Phase plot distance travelled against initial velocity angle."
