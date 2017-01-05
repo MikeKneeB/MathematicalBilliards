@@ -21,18 +21,19 @@ def main():
 	outfile.write('{0:<10}{1:<17}{2:<17}{3:<10}{4:<10}\n'.format('nboxes', 'boxlen', 'iboxlen', 'count', 'boxdim'))
 
 	for i in range(1, args.maxboxes[0]+1):
-                reali = i
-                #reali = int(10^i)
-		output = numpy.zeros([reali, reali])
-		boxlen = 1.0*maxsize*2/reali
-		for j in range(reali):
-			for k in range(reali):
-				box = (-maxsize + k*boxlen, -maxsize + j*boxlen)	
-				for point in data:
-					if checkin(box, boxlen, point):
-						output[k][j] += 1 
-		count = countfull(output)
-		outfile.write('{0:<10}{1:<17}{2:<17}{3:<10}\n'.format(reali*reali, boxlen, 1.0/boxlen, count))
+            print i
+            reali = i
+            #reali = int(10^i)
+	    output = numpy.zeros([reali, reali])
+            boxlen = 1.0*maxsize*2/reali
+	    for j in range(reali):
+	        for k in range(reali):
+			box = (-maxsize + k*boxlen, -maxsize + j*boxlen)	
+			for point in data:
+				if checkin(box, boxlen, point):
+					output[k][j] += 1 
+	    count = countfull(output)
+	    outfile.write('{0:<10}{1:<17}{2:<17}{3:<10}\n'.format(reali*reali, boxlen, 1.0/boxlen, count))
 
 	outfile.close()
 

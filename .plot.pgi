@@ -3,19 +3,28 @@ set grid
 set term pdf 
 
 if (fname[:4] eq 'frac') {
+	set term pdf size 10,10
+	set size ratio -1
 	print "Phase plot distance travelled against initial velocity angle."
 	set output 'distanceVelocityAngle.pdf' 
 	set ylabel "Initial velocity angle"
 	set xlabel "Distance travelled"
 	plot fname using 'pLength':'angle' with points pt 0 title 'mod distance'
+	pause -1
 
 	print "Phase plot x/y distance travelled against velocity angle."
 	set output 'coordDistanceVelocityAngle.pdf' 
 	plot fname using 'xLength':'angle' with points pt 0 title 'x distance', fname using 'yLength':'angle' with points pt 0 title 'y distance'
+	pause -1
 
 	print "Not very useful, but hopefully pretty fractal."
+	set xrange [-20:20]
+	set yrange [-20:20]
+	set ylabel ''
+	set xlabel ''
 	set output 'radialDistanceAngle.pdf'
 	plot fname using 'xVec':'yVec' with points pt 0 title 'x/y'
+	pause -1
 
 	exit
 }

@@ -165,15 +165,15 @@ void GetArgs(Vector & initial, Vector & velocity);
  * function has run.
  *
  * The type of billiard table must be specified using the parameter type. The
- * three options are: 1=circular 2= elliptical 3=rectangular 4=stadium. The
+ * three options are: 1=circular 2= elliptical 3=rectangular 4=stadium 5=lorentz. The
  * parameter params must contain the necessary number of parameters defining
  * the geometry of the table. For the rectangular and stadium tables this is
  * an array with two values, for the circular table just one and three for the
- * elliptical table.
+ * elliptical and lorentz tables.
  *
  * Vector & initial: Vector to store initial position in.
  * Vector & velocity: Vector to store initial velocity in.
- * int type: integer 1-4 specifying the type of table to generate values for.
+ * int type: integer 1-5 specifying the type of table to generate values for.
  * double params[]: array specifying the geometry of the table.
  */
 void RandomArgs(Vector & initial, Vector & velocity, int type, double params[]);
@@ -788,7 +788,33 @@ void RunLorentz(int n)
 
 	Vector initial, velocity;
 
-	GetArgs(initial, velocity);
+	int choice;
+
+	printf("Enter 1 for random initial coniditions, and 0 for user-input: ");
+
+	//Choose random of specified arguments.
+	while (!(std::cin >> choice))
+	{
+		std::cin.clear();
+		std::cin.ignore();
+		printf("Please enter a valid choice: ");
+	}
+
+	if (choice)
+	{
+		//Table parameters stored in array to be passed to the random
+		//initial condition generator.
+		double params[3] = {x, y, r};
+		//Randomly generate based on table parameters.
+		RandomArgs(initial, velocity, 5, params);
+	}
+	else
+	{
+		//Otherwise ask for user arguments.
+		GetArgs(initial, velocity);
+	}
+
+	//GetArgs(initial, velocity);
 
 	FILE * file;
 
@@ -1101,8 +1127,35 @@ void RandomArgs(Vector & initial, Vector & velocity, int type, double params[])
 			iY = rangeY(engine);
 		}
 	}
-	//Type is not recognised. This will never be encountered, as this
-	//function is only used internally.
+	//Lorentz table:
+	else if (type == 5)	
+	{
+		//Generate x position.
+		std::uniform_real_distribution<double> rangeX(-params[0], params[0]);
+		
+		iX = rangeX(engine);
+		
+		//iX is not in the inner circle, generate y as for rectangle.
+		if (iX > params[2] || iX < -params[2])
+		{
+			std::uniform_real_distribution<double> rangeY(-params[1], params[1]);
+
+			iY = rangeY(engine);
+		}
+		//iX is in the inner circle.
+		else
+		{
+			//Find y coord of circle radius at point iX
+			temp = std::sqrt(params[2] * params[2] - iX * iX);
+
+			//Real distrib is between radius of circle and upper edge of rectangle.
+			//This cannot generate -ve y, but as the table is symmetric about the y
+			//axis this is not expected to be an issue.
+			std::uniform_real_distribution<double> rangeY(temp, params[1]);
+
+			iY = rangeY(engine);
+		}
+	}
 	else
 	{
 		printf("NO\n");
