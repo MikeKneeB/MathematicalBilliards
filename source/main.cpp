@@ -220,6 +220,7 @@ int main()
 		//Don't display simulation options for the help function.
 		if (choice != 6)
 		{		
+			printf("\n# Simulation Type: #\n");
 			printf("Please enter 0 for regular plots, 1 for fractal plots or 2 for chaotic behaviour analysis: ");
 			while (!(std::cin >> secondChoice) || secondChoice < 0 || secondChoice > 2)
 			{
@@ -228,7 +229,7 @@ int main()
 				std::cin.ignore();
 			}
 
-			printf("Please enter number of iterations: ");
+			printf("\n# Number of Iterations: #\nPlease enter number of iterations: ");
 			std::cin >> n;
 		}
 
@@ -287,7 +288,7 @@ void RunStadium(int n)
 	//Get stadium dimensions. See StadiumTable class for details of how
 	//this table is parameterised. 
 	double y, x;
-	printf("Please enter y size: ");
+	printf("\n# Table Dimensions: #\nPlease enter y size: ");
 	std::cin >> y;
 	printf("Please enter x size: ");
 	std::cin >> x;
@@ -299,7 +300,7 @@ void RunStadium(int n)
 
 	bool choice;
 
-	printf("Enter 1 for random initial coniditions, and 0 for user-input: ");
+	printf("\n# Initial Conditions: #\nEnter 1 for random initial coniditions, and 0 for user-input: ");
 
 	//Choose random of specified arguments.
 	while (!(std::cin >> choice))
@@ -344,7 +345,7 @@ void StadiumChaos(int n)
 	//Get stadium dimensions. See StadiumTable class for details of how
 	//this table is parameterised. 
 	double y, x;
-	printf("Please enter y size: ");
+	printf("\n# Table Dimensions: #\nPlease enter y size: ");
 	std::cin >> y;
 	printf("Please enter x size: ");
 	std::cin >> x;
@@ -354,10 +355,11 @@ void StadiumChaos(int n)
 
 	Vector initial1, velocity1, initial2, velocity2;
 
+	printf("\n# Initial Conditions: #\n");
 	//No random option.
 	GetArgs(initial1, velocity1);
 
-	printf("\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	printf("\n# Second Initial Conditions: #\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
 	//Need two sets of initial conditions for this analysis.
 	GetArgs(initial2, velocity2);
 
@@ -381,14 +383,14 @@ void StadiumFractal(int n)
 {
 	//Get table dimensions as before.
 	double y, x;
-	printf("Please enter y size: ");
+	printf("\n#Table Dimensions: #\nPlease enter y size: ");
 	std::cin >> y;
 	printf("Please enter x size: ");
 	std::cin >> x;
 
 	//Get offset.
 	double offset;
-	printf("Please enter offset from table edge (rec ~ 0.00001): ");
+	printf("\n# Offset: #\nPlease enter offset from table edge (rec ~ 0.00001): ");
 	std::cin >> offset;
 
 	//Create table.
@@ -419,7 +421,7 @@ void RunEllipse(int n)
 {
 	//Table dimensions.
 	double y, x, r;
-	printf("Please enter y coefficient: ");
+	printf("\n# Table Dimensions: #\nPlease enter y coefficient: ");
 	std::cin >> y;
 	printf("Please enter x coefficient: ");
 	std::cin >> x;
@@ -432,7 +434,7 @@ void RunEllipse(int n)
 
 	bool choice;
 
-	printf("Enter 1 for random initial conditions, and 0 for user-input: ");
+	printf("\n# Initial Conditions: #\nEnter 1 for random initial conditions, and 0 for user-input: ");
 
 	while (!(std::cin >> choice))
 	{
@@ -473,7 +475,7 @@ void EllipticalChaos(int n)
 	//Get stadium dimensions. See StadiumTable class for details of how
 	//this table is parameterised. 
 	double y, x, r;
-	printf("Please enter y coefficient: ");
+	printf("\n# Table Dimensions: #\nPlease enter y coefficient: ");
 	std::cin >> y;
 	printf("Please enter x coefficient: ");
 	std::cin >> x;
@@ -485,10 +487,11 @@ void EllipticalChaos(int n)
 
 	Vector initial1, velocity1, initial2, velocity2;
 
+	printf("\n# Initial Conditions: #\n");
 	//No random option.
 	GetArgs(initial1, velocity1);
 
-	printf("\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	printf("\n# Second Initial Conditions: #\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
 
 	//Need two sets of initial conditions for this analysis.
 	GetArgs(initial2, velocity2);
@@ -514,7 +517,7 @@ void EllipticalFractal(int n)
 {
 	//Get dimensions.
 	double y, x, r;
-	printf("Please enter y coefficient: ");
+	printf("\n# Table Dimensions: #\nPlease enter y coefficient: ");
 	std::cin >> y;
 	printf("Please enter x coefficient: ");
 	std::cin >> x;
@@ -522,7 +525,7 @@ void EllipticalFractal(int n)
 	std::cin >> r;
 
 	double offset;
-	printf("Please enter offset from table edge (rec ~ 0.00001): ");
+	printf("\n# Offset: #\nPlease enter offset from table edge (rec ~ 0.00001): ");
 	std::cin >> offset;
 
 	EllipseTable table = EllipseTable(r, x, y);
@@ -548,7 +551,7 @@ void RunCircle(int n)
 {
 	//Get dimensions.
 	double r;
-	printf("Please enter radius: ");
+	printf("\n# Table Dimensions: #\nPlease enter radius: ");
 	std::cin >> r;
 
 	CircleTable table = CircleTable(r);
@@ -557,7 +560,7 @@ void RunCircle(int n)
 
 	bool choice;
 
-	printf("Enter 1 for random initial conditions, and 0 for user-input: ");
+	printf("\n# Initial Conditions: #\nEnter 1 for random initial conditions, and 0 for user-input: ");
 
 	while (!(std::cin >> choice))
 	{
@@ -597,7 +600,7 @@ void CircularChaos(int n)
 {
 	//Get dimensions.
 	double r;
-	printf("Please enter radius: ");
+	printf("\n# Table Dimensions: #\nPlease enter radius: ");
 	std::cin >> r;
 
 	//Create table.
@@ -605,10 +608,11 @@ void CircularChaos(int n)
 
 	Vector initial1, velocity1, initial2, velocity2;
 
+	printf("\n# Initial Conditions: #\n");
 	//No random option.
 	GetArgs(initial1, velocity1);
 
-	printf("\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	printf("\n# Second Initial Conditions: #\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
 	//Need two sets of initial conditions for this analysis.
 	GetArgs(initial2, velocity2);
 
@@ -633,11 +637,11 @@ void CircularFractal(int n)
 {
 	//As in previous fractal functions:
 	double r;
-	printf("Please enter radius: ");
+	printf("\n#Table Dimensions: #\nPlease enter radius: ");
 	std::cin >> r;
 
 	double offset;
-	printf("Please enter offset from table edge (rec ~ 0.00001): ");
+	printf("\n# Offset: #\nPlease enter offset from table edge (rec ~ 0.00001): ");
 	std::cin >> offset;
 
 	CircleTable table = CircleTable(r);
@@ -660,7 +664,7 @@ void RunRectangle(int n)
 {
 	//As in previous run functions:
 	double y, x;
-	printf("Please enter y size: ");
+	printf("\n# Table Dimensions: #\nPlease enter y size: ");
 	std::cin >> y;
 	printf("Please enter x size: ");
 	std::cin >> x;
@@ -671,7 +675,7 @@ void RunRectangle(int n)
 
 	bool choice;
 
-	printf("Enter 1 for random initial conditions, or 0 for user-input: ");
+	printf("\n# Initial Conditions: #\nEnter 1 for random initial conditions, or 0 for user-input: ");
 
 	while (!(std::cin >> choice))
 	{
@@ -710,7 +714,7 @@ void RectangularChaos(int n)
 {
 	//Get dimensions.
 	double x, y;
-	printf("Please enter y size: ");
+	printf("\n# Table Dimensions: #\nPlease enter y size: ");
 	std::cin >> y;
 	printf("Please enter x size: ");
 	std::cin >> x;
@@ -720,10 +724,11 @@ void RectangularChaos(int n)
 
 	Vector initial1, velocity1, initial2, velocity2;
 
+	printf("\n# Initial Conditions: #\n");
 	//No random option.
 	GetArgs(initial1, velocity1);
 
-	printf("\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	printf("\n# Second Initial Conditions: #\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
 	//Need two sets of initial conditions for this analysis.
 	GetArgs(initial2, velocity2);
 
@@ -748,13 +753,13 @@ void RectangularFractal(int n)
 {
 	//As in previous fractal functions:
 	double y, x;
-	printf("Please enter y size: ");
+	printf("\n# Table Dimensions: #\nPlease enter y size: ");
 	std::cin >> y;
 	printf("Please enter x size: ");
 	std::cin >> x;
 
 	double offset;
-	printf("Please enter offset from table edge (rec ~ 0.00001): ");
+	printf("\n# Offset: #\nPlease enter offset from table edge (rec ~ 0.00001): ");
 	std::cin >> offset;
 
 	RectangleTable table = RectangleTable(x, y);
@@ -777,7 +782,7 @@ void RunLorentz(int n)
 {
 	//As in previous run functions:
 	double y, x, r;
-	printf("Please enter y size: ");
+	printf("\n# Table Dimensions: #\nPlease enter y size: ");
 	std::cin >> y;
 	printf("Please enter x size: ");
 	std::cin >> x;
@@ -790,7 +795,7 @@ void RunLorentz(int n)
 
 	int choice;
 
-	printf("Enter 1 for random initial coniditions, and 0 for user-input: ");
+	printf("\n# Initial Conditions: #\nEnter 1 for random initial coniditions, and 0 for user-input: ");
 
 	//Choose random of specified arguments.
 	while (!(std::cin >> choice))
@@ -835,7 +840,7 @@ void LorentzChaos(int n)
 {
 	//Get dimensions.
 	double x, y, r;
-	printf("Please enter y size: ");
+	printf("\n# Table Dimensions: #\nPlease enter y size: ");
 	std::cin >> y;
 	printf("Please enter x size: ");
 	std::cin >> x;
@@ -847,9 +852,10 @@ void LorentzChaos(int n)
 
 	Vector initial1, velocity1, initial2, velocity2;
 
+	printf("\n# Initial Condtions: #\n");
 	//No random option.
 	GetArgs(initial1, velocity1);
-	printf("\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
+	printf("\n# Second Initial Conditions: #\nPlease now enter a second set of initial conditions for comparison.\nThese should be very close to the first set, for analysis of how\nsmall changes to initial conditions affect the system.\n");
 	//Need two sets of initial conditions for this analysis.
 	GetArgs(initial2, velocity2);
 
@@ -874,7 +880,7 @@ void LorentzFractal(int n)
 {
 	//As in previous fractal functions:
 	double y, x, r;
-	printf("Please enter y size: ");
+	printf("\n# Table Dimensions: #\nPlease enter y size: ");
 	std::cin >> y;
 	printf("Please enter x size: ");
 	std::cin >> x;
@@ -882,7 +888,7 @@ void LorentzFractal(int n)
 	std::cin >> r;
 
 	double offset;
-	printf("Please enter offset from table edge (rec ~ 0.00001): ");
+	printf("\n# Offset: #\nPlease enter offset from table edge (rec ~ 0.00001): ");
 	std::cin >> offset;
 
 	LorentzTable table = LorentzTable(x, y, r);

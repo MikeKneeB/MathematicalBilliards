@@ -12,7 +12,7 @@ import os
 import glob
 import sys
 
-parser = argparse.ArgumentParser(description='Build automater written by Mike Knee')
+parser = argparse.ArgumentParser(description='Build automater written by Mike Knee.\n\nExecutables output to exe_dir, which unless changed by you is "images".')
 
 parser.add_argument('--flags', '-f', nargs='*', help='Specify non-default compiler flags. The "-" should be omitted e.g. "-f O2 Wall" ') 
 parser.add_argument('--suppress-flags', help='Suppress default compiler switches', action='store_true')
@@ -28,9 +28,7 @@ exe_dir="images/"
 obj_dir="obj/"
 success = True
 
-executables_to_compile={"test.cpp" : "test",
-			"rectest.cpp" : "rectest",
-			"main.cpp" : "main"}
+executables_to_compile={"main.cpp" : "BilliardsSimulation"}
 
 
 args = parser.parse_args()

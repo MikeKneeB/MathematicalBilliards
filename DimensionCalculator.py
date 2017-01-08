@@ -33,7 +33,7 @@ def main():
 				if checkin(box, boxlen, point):
 					output[k][j] += 1 
 	    count = countfull(output)
-	    outfile.write('{0:<10}{1:<17}{2:<17}{3:<10}\n'.format(reali*reali, boxlen, 1.0/boxlen, count))
+            outfile.write('{0:<10}{1:<17}{2:<17}{3:<10}{4:<17}\n'.format(reali*reali, boxlen, 1.0/boxlen, count, numpy.log(count)/numpy.log(1.0/boxlen)))
 
 	outfile.close()
 

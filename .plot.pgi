@@ -10,12 +10,10 @@ if (fname[:4] eq 'frac') {
 	set ylabel "Initial velocity angle"
 	set xlabel "Distance travelled"
 	plot fname using 'pLength':'angle' with points pt 0 title 'mod distance'
-	pause -1
 
 	print "Phase plot x/y distance travelled against velocity angle."
 	set output 'coordDistanceVelocityAngle.pdf' 
 	plot fname using 'xLength':'angle' with points pt 0 title 'x distance', fname using 'yLength':'angle' with points pt 0 title 'y distance'
-	pause -1
 
 	print "Not very useful, but hopefully pretty fractal."
 	set xrange [-20:20]
@@ -24,7 +22,6 @@ if (fname[:4] eq 'frac') {
 	set xlabel ''
 	set output 'radialDistanceAngle.pdf'
 	plot fname using 'xVec':'yVec' with points pt 0 title 'x/y'
-	pause -1
 
 	exit
 }
@@ -58,11 +55,11 @@ if (fname[:3] eq 'box') {
 	set ylabel "log number of occupied squares"
 	plot fname using 'iboxlen':'count' with lines
 
-	#set output 'boxDim2.pdf'
-	#unset logscale
-	#set xlabel "box length"
-	#set ylabel "box dimension"
-	#plot fname using 'boxlen':'boxdim' with lines
+	set output 'boxDim2.pdf'
+	unset logscale
+	set xlabel "box length"
+	set ylabel "box dimension"
+	plot fname using 'boxlen':'boxdim' with lines
 	
 	exit
 } 
