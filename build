@@ -54,6 +54,9 @@ elif args.clean:
     print
     sys.exit(0)
 
+if not os.path.isdir(obj_dir):
+    os.mkdir(obj_dir)
+
 if args.sources==None:
     print
     print "Beginning build."
@@ -97,7 +100,6 @@ if args.sources==None:
     print
 
 else:
-
     for item in args.sources:
         if args.windows:
             exe_list = [compiler, "-o", exe_dir+executables_to_compile[source_file]+'.exe', source_dir+source_file]
