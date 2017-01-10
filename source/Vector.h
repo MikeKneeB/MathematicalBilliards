@@ -1,3 +1,9 @@
+/**
+ * Mike Knee 09/01/2017
+ *
+ * Header file for the Vector class.
+ */
+
 #ifndef _VECTOR_H
 #define _VECTOR_H
 

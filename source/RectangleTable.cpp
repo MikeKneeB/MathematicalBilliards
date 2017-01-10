@@ -1,3 +1,9 @@
+/**
+ * Mike Knee 09/01/2017
+ *
+ * Source file for the RectangleTable class.
+ */
+
 #include <cmath>
 
 #include "RectangleTable.h"

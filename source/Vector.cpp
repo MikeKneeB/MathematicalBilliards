@@ -1,3 +1,8 @@
+/**
+ * Mike Knee 09/01/2017
+ *
+ * Source file for the Vector class.
+ */
 #include "Vector.h"
 
 #include <cmath>
@@ -23,21 +28,25 @@ double Vector::Dot(const Vector & other) const
 
 double Vector::Arg() const
 {
+	//Vector argument.
 	return std::atan(fY/fX);
 }
 
 double Vector::Mod() const
 {
+	//Vector modulus.
 	return std::sqrt(fX * fX + fY * fY);
 }
 
 Vector Vector::Norm() const
 {
+	//Vector normal.
 	return Vector(fX / this->Mod(), fY / this->Mod());
 }
 
 Vector Vector::Rotate(double angle) const
 {
+	//Rotation using matrix.
 	return Vector(fX * cos(angle) - fY * sin(angle), fX * sin(angle) + fY * cos(angle));
 }
 

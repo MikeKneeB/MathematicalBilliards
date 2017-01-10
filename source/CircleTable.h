@@ -1,3 +1,9 @@
+/**
+ * Mike Knee 09/01/2017
+ *
+ * Header file for the CircleTable class.
+ */
+
 #ifndef _CIRCLETABLE_H
 #define _CIRCLETABLE_H
 

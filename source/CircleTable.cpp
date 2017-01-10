@@ -1,3 +1,9 @@
+/**
+ * Mike Knee 09/01/2017
+ *
+ * Source file for the CircleTable class.
+ */
+
 #include <cmath>
 
 #include "CircleTable.h"

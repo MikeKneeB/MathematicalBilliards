@@ -1,3 +1,9 @@
+/**
+ * Mike Knee 09/01/2016
+ *
+ * Header file for the ITable interface.
+ */
+
 #ifndef _ITABLE_H
 #define _ITABLE_H
 

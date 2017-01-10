@@ -1,3 +1,9 @@
+/**
+ * Mike Knee 09/01/2017
+ *
+ * Header file for the StadiumTable class.
+ */
+
 #ifndef _STADIUMTABLE_H
 #define _STADIUMTABLE_H
 

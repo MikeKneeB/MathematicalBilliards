@@ -1,3 +1,9 @@
+/**
+ * Mike Knee 09/01/2017
+ *
+ * Header file for the EllipseTable class.
+ */
+
 #ifndef _ELLIPSETABLE_H
 #define _ELLIPSETABLE_H
 

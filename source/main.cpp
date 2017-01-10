@@ -1,3 +1,14 @@
+/**
+ * Mathematical Billiards Main
+ *
+ * Mike Knee 09/01/17
+ *
+ * Main file for the Mathematical billiards simulation.
+ * Can run the simulation in three ways: normal plots, chaotic plots and
+ * fractal. Outputs to .dat text file, the full name of which is displayed
+ * on the screen when outputting.
+ */ 
+
 #include <cstdio>
 #include <iostream>
 #include <cmath>
@@ -41,6 +52,20 @@ void RunStadium(int n);
  */
 void StadiumFractal(int n);
 
+/**
+ * StadiumChaos creates a table as above, but then asks for initial conditions
+ * for two billiards balls. These balls are both simulated, and there positions
+ * and other relevant data are both output to a text file.
+ *
+ * This is designed to measure the chaotic nature of the billiards table, to
+ * see how quickly small changes in initial conditions affect the system.
+ *
+ * Outputs to 'chaostadout.dat'.
+ *
+ * This method calls the InnerChaos method.
+ *
+ * int n: iterations of the simulation to run.
+ */
 void StadiumChaos(int n);
 
 /**
@@ -59,6 +84,11 @@ void RunEllipse(int n);
  */
 void EllipticalFractal(int n);
 
+/**
+ * See StadiumChaos for details, output to 'chaoelipout.dat'.
+ *
+ * int n: iterations of the simulation to run.
+ */
 void EllipticalChaos(int n);
 
 /**
@@ -76,6 +106,11 @@ void RunCircle(int n);
  */
 void CircularFractal(int n);
 
+/**
+ * See StadiumChaos for details, output to 'chaocircout.dat'.
+ *
+ * int n: iterations of the simulation to run.
+ */
 void CircularChaos(int n);
 
 /**
@@ -92,6 +127,11 @@ void RunRectangle(int n);
  */
 void RectangularFractal(int n);
 
+/**
+ * See StadiumChaos for details, output to 'chaorectout.dat'.
+ *
+ * int n: iterations of the simulation to run.
+ */
 void RectangularChaos(int n);
 
 /**
@@ -110,6 +150,11 @@ void RunLorentz(int n);
  */
 void LorentzFractal(int n);
 
+/**
+ * See StadiumChaos for details, output to 'chaoloreout.dat'.
+ *
+ * int n: iterations of the simulation to run.
+ */
 void LorentzChaos(int n);
 
 /**
@@ -147,6 +192,23 @@ void InnerRun(ITable & table, Vector & position, Vector & velocity, int n, FILE 
  */
 void InnerFrac(ITable & table, Vector & position, Vector & velocity, int n, FILE * file);
 
+/**
+ * InnerChaos runs the chaotic simulation internally. Unlike the other two
+ * inner functions this takes two sets of initial conditions, and runs the
+ * table using both in order to see how small changes affect the system.
+ *
+ * Once this function has run velocity1 & position1 will contain the final
+ * state of the first billiard; velocity2 & position2 will contain the state
+ * of the second.
+ *
+ * ITable & table: billiard table for the simulation.
+ * Vector & position1: initial position for the first billiard ball.
+ * Vector & position2: initial position for the second billiard ball.
+ * Vector & velocity1: initial velocity for the first billiard ball.
+ * Vector & velocity2: initial velocity for the second billiard ball.
+ * int n: number of iterations of the simulation.
+ * FILE * file: file stream to write to.
+ */
 void InnerChaos(ITable & table, Vector & position1, Vector & position2, Vector & velocity1, Vector & velocity2, int n, FILE * file);
 
 /**
@@ -1133,7 +1195,7 @@ void RandomArgs(Vector & initial, Vector & velocity, int type, double params[])
 			iY = rangeY(engine);
 		}
 	}
-	//Lorentz table:
+	//Type 5 = lorentz:
 	else if (type == 5)	
 	{
 		//Generate x position.
@@ -1162,9 +1224,11 @@ void RandomArgs(Vector & initial, Vector & velocity, int type, double params[])
 			iY = rangeY(engine);
 		}
 	}
+	//This will never happen, as this function is only called internally.
 	else
 	{
-		printf("NO\n");
+		//Debug message.
+		printf("Incorrect table type.\n");
 		iY = 0;
 		iX = 0;
 	}
@@ -1177,7 +1241,7 @@ void RandomArgs(Vector & initial, Vector & velocity, int type, double params[])
 	velocity = Vector(0.0, 0.0);
 	std::uniform_real_distribution<double> rangeV(-1,1);
 
-	//Want at least one velocity component to be non-zero.
+	//Require at least one velocity component to be non-zero.
 	while (velocity.fX == 0.0 && velocity.fY == 0.0)
 	{
 		velocity.fX = rangeV(engine);
@@ -1199,6 +1263,10 @@ void Help()
 	printf("\nwill produce output in different files. The fractal data is useful for observing");
 	printf("\nchaotic (and hence fractal) properties of the system. The regular data is more");
 	printf("\nuseful for observing other system properties.");
+	printf("\n");
+	printf("\nThe third option is the chaotic analysis option, which takes two sets of initial");
+	printf("\nconditions (which should be close to each other) and generates data to observe");
+	printf("\nhow small changes to initial conditions affect the system.");
 	printf("\n");
 	printf("\nEnter a menu choice (0 - 6) to see details or to exit help: ");
 	while (true)

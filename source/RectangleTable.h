@@ -1,3 +1,9 @@
+/**
+ * Mike Knee 09/01/2017
+ *
+ * Header file for the RectangleTable class.
+ */
+
 #ifndef _RECTANGLETABLE_H
 #define _RECTANGLETABLE_H
 
