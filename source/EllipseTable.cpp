@@ -22,6 +22,7 @@ double EllipseTable::AngleIncidence(const Vector & collision, const Vector & vel
 {
 	double theta;
 
+	//Standard ellipse angle formula.
 	theta = std::atan((collision.fY * fXCoef * fXCoef)/(collision.fX * fYCoef * fYCoef));
 
 	return M_PI - theta - velocity.Arg();
@@ -31,15 +32,19 @@ Vector EllipseTable::ReflectVector(const Vector & collision, const Vector & velo
 {
 	double theta;
 
+	//Ellipse surface normal.
 	theta = std::atan((collision.fY * fXCoef * fXCoef)/(collision.fX * fYCoef * fYCoef));
 
+	//Use this for normal vector:
 	Vector norm = Vector(std::cos(theta), std::sin(theta));
 
+	//Calc:
 	return velocity - 2*velocity.Dot(norm)*norm;
 }
 
 Vector EllipseTable::CollisionPoint(const Vector & initial, const Vector & velocity)
 {
+	//Solve using quadratic eqn.
 	double gamma;
 
 	double a, b, c;
@@ -50,6 +55,7 @@ Vector EllipseTable::CollisionPoint(const Vector & initial, const Vector & veloc
 
 	gamma = (-b + std::sqrt(b * b - 4 * a * c))/(2 * a);
 
+	//p = i + gv
 	return initial + gamma * velocity;
 
 }

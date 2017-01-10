@@ -20,11 +20,13 @@ CircleTable::~CircleTable()
 
 double CircleTable::AngleIncidence(const Vector & collision, const Vector & velocity)
 {
+	//Angle incidence.
 	return M_PI - collision.Arg() - velocity.Arg();
 }
 
 Vector CircleTable::ReflectVector(const Vector & collision, const Vector & velocity)
 {
+	//See report for details.
 	Vector temp;
 
 	temp = velocity - 2*(velocity.Dot(-collision)*(-collision))/collision.Mod();
@@ -34,6 +36,7 @@ Vector CircleTable::ReflectVector(const Vector & collision, const Vector & veloc
 
 Vector CircleTable::CollisionPoint(const Vector & initial, const Vector & velocity)
 {
+	//Solve collision point using qaudratic eqn.
 	double gamma;
 
 	double a, b, c;

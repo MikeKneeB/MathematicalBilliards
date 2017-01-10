@@ -46,7 +46,9 @@ double StadiumTable::AngleIncidence(const Vector & collision, const Vector & vel
 	//If in left semi-circle:
 	else if (collision.fX >= fX)
 	{
+		//Move semi-circle to origin centre:
 		norm = collision - Vector(fX, 0);		
+		//Normalise.
 		norm = norm/norm.Mod();
 	}
 	//If in right semi-circle:
@@ -94,22 +96,30 @@ Vector StadiumTable::CollisionPoint(const Vector & initial, const Vector & veloc
 	double gamma;
 	Vector temp;
 
+	//Going up:
 	if (velocity.fY > 0)
 	// Set y = fY:
 	{
 		//p = i + gv
+		//Work out gamma first by rearranging.
 		gamma = (fY - initial.fY)/velocity.fY;
+		//X collision point:
 		double x = initial.fX + gamma * velocity.fX;
+		//x is within rectangular section:
 		if (x <= fX && x >= -fX)
 		{
 			return Vector(x, fY);
 		}
+		//x is in right semi-circle:
 		else if (x >= fX)
 		{
+			//Only do this if started in semi-circle:
 			if (initial.fX >= fX)
 			{
+				//Move coordinates so semi-circle is centre (0,0):
 				temp = initial - Vector(fX,0);
 
+				//Solve quadratic eqn.
 				double a, b, c;
 
 				a = velocity.fX * velocity.fX + velocity.fY * velocity.fY;
@@ -118,11 +128,14 @@ Vector StadiumTable::CollisionPoint(const Vector & initial, const Vector & veloc
 
 				gamma = (-b + std::sqrt(b * b - 4 * a * c))/(2 * a);
 
+				//Return
 				return temp + gamma * velocity + Vector(fX,0);
 			}
 		}
+		//x is in left semi-circle, as before:
 		else if (x <= -fX)
 		{
+			//Only do this is started in semi-circle:
 			if (initial.fX <= -fX)
 			{
 				temp = initial - Vector(-fX,0);
@@ -140,6 +153,7 @@ Vector StadiumTable::CollisionPoint(const Vector & initial, const Vector & veloc
 			}
 		}
 	}
+	//Going down:
 	else if (velocity.fY < 0)
 	// Set y = -fY:
 	{
@@ -187,6 +201,8 @@ Vector StadiumTable::CollisionPoint(const Vector & initial, const Vector & veloc
 	}
 
 	// Setting y = fY has gone out of bounds, so now set x = fX:
+	// Here we know collision is with semi-circle, from outside semi-circle.
+	// Just move semi-circle to centre, and solve using quadratic eqn.
 	if (velocity.fX > 0)
 	// x = fX:
 	{

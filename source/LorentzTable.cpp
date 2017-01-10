@@ -1,3 +1,9 @@
+/**
+ * Mike Knee 10/01/2017
+ *
+ * Source file for the LorentzTable class.
+ */
+
 #include <cmath>
 #include <cstdio>
 
@@ -43,6 +49,7 @@ double LorentzTable::AngleIncidence(const Vector & collision, const Vector & vel
 	Vector norm;
 	double temp;
 
+	//As rectangle, except final case.
 	if (collision.fX == fX)
 	{
 		// Check corner cases.
@@ -74,6 +81,7 @@ double LorentzTable::AngleIncidence(const Vector & collision, const Vector & vel
 	else if (collision.fY == -fY)
 		norm = Vector(0,1);
 	else
+		//Hasn't hit a wall, must have hit centre circle:
 		norm = collision/collision.Mod();
 
 	// Reflect velocity in surface normal.
@@ -85,6 +93,7 @@ Vector LorentzTable::ReflectVector(const Vector & collision, const Vector & velo
 {
 	Vector temp, norm;
 
+	//As rectangle, but final circular case different.
 	if (collision.fX == fX)
 	{
 		// Check corner cases.
@@ -116,6 +125,7 @@ Vector LorentzTable::ReflectVector(const Vector & collision, const Vector & velo
 	else if (collision.fY == -fY)
 		norm = Vector(0,1);
 	else
+		//Hasn't hit a wall, must have collided with circle.
 		norm = collision/collision.Mod();
 
 	// Reflect velocity in surface normal.
@@ -134,6 +144,7 @@ Vector LorentzTable::CollisionPoint(const Vector & initial, const Vector & veloc
 	c = initial.fX * initial.fX + initial.fY * initial.fY - fRadius * fRadius;
 
 
+	//Check for collision with circle first.
 	if (b * b - 4 * a * c > 0)
 	{
 		gamma = (-b - std::sqrt(b * b - 4 * a * c))/(2 * a);
