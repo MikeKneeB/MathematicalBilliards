@@ -4,6 +4,8 @@ Mathematical blliards numerical modelling project.
 
 Recommended to use the build script provided to build the executable, which will be output to the images directory.
 
+The project report is stored in the docs folder.
+
 ## BilliardSimulation
 
 The main simulation executable for the project. This is used to produce the .dat files for analysis using the DimensionCalculator and Plotter scripts. Usage should be fairly straightforward.
